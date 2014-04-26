@@ -12,8 +12,7 @@ void tiles_c    (
 	int tamx,
 	int tamy,
 	int offsetx,
-	int offsety)
-{
+	int offsety){
 	unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 	unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
 
@@ -21,8 +20,21 @@ void tiles_c    (
 		for (int j_d = 0, j_s = 0; j_d < cols; j_d++, j_s++) {
 			rgb_t *p_d = (rgb_t*)&dst_matrix[i_d][j_d*3];
 			rgb_t *p_s = (rgb_t*)&src_matrix[i_s][j_s*3];
-			*p_d = *p_s;
-		}
-	}
+			*p_d = *p_s;}}
 
-}
+	
+
+	int hs = (offsety); //altura fuente
+	int ws = (offsetx*3); //ancho fuente
+	int j = 0;
+		for( int a = 0; a < filas ; a++){
+			for(int l = 0; l < cols*3 ; l++ ){
+				dst_matrix[a][l] = src_matrix[hs][ws]; //copio el byte
+				ws += 1;
+				if( ws == ((offsetx*3) + (tamx*3))) //si llegue al final del recuadro arranco del principio
+				{
+					ws = (offsetx*3);}}
+			ws = (offsetx*3); //al terminar toda la fila arranco del principio del tile
+			hs += 1; //bajo un nivel del tile
+			if ( hs == (offsety + tamy)){
+				hs = offsety;}}}
