@@ -23,10 +23,10 @@ void popart_c    (
 		for (int j_d = 0, j_s = 0; j_d < cols; j_d++, j_s++) {
 			rgb_t *p_d = (rgb_t*)&dst_matrix[i_d][j_d*3];
 			rgb_t *p_s = (rgb_t*)&src_matrix[i_s][j_s*3];
-			int s = temperatura(p_s->r, p_s->g, p_s->b);
+			int s = pop_art(p_s->r, p_s->g, p_s->b);
 			*p_d = colores[s];}}}
 			
-int temperatura(unsigned int r, unsigned int g, unsigned int b){
+int pop_art(unsigned int r, unsigned int g, unsigned int b){
 	unsigned int suma = r + g + b;
 	int res;
 	
