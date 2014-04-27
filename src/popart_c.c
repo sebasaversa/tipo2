@@ -8,6 +8,19 @@ rgb_t colores[] = { {255,   0,   0},
                     {  0,   0, 255},
                     {  0, 255, 255} };
 
+			
+int pop_art(unsigned int r, unsigned int g, unsigned int b){
+	unsigned int suma = r + g + b;
+	int res;
+	
+	if 		 (suma < 153)	{res = 0;}
+	else if (suma < 306)	{res = 1;}
+	else if (suma < 459)	{res = 2;}
+	else if (suma < 612)	{res = 3;}
+	else 					{res = 4;}
+	
+	return res;}
+
 void popart_c    (
 	unsigned char *src,
 	unsigned char *dst,
@@ -25,15 +38,3 @@ void popart_c    (
 			rgb_t *p_s = (rgb_t*)&src_matrix[i_s][j_s*3];
 			int s = pop_art(p_s->r, p_s->g, p_s->b);
 			*p_d = colores[s];}}}
-			
-int pop_art(unsigned int r, unsigned int g, unsigned int b){
-	unsigned int suma = r + g + b;
-	int res;
-	
-	if 		 (suma < 153)	{res = 0;}
-	else if (suma < 306)	{res = 1;}
-	else if (suma < 459)	{res = 2;}
-	else if (suma < 612)	{res = 3;}
-	else 					{res = 4;}
-	
-	return res;}

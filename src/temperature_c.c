@@ -11,6 +11,14 @@
 bool between(unsigned int val, unsigned int a, unsigned int b){
 	return a <= val && val <= b;}
 
+void temperatura(rgb_t* p_d, unsigned int r, unsigned int g, unsigned int b){
+	unsigned int prom = (r + g + b) / 3;
+
+	if 		 (prom < 32)	{p_d->r = 0; 				p_d->g = 0; 				p_d->b = 128 + 4*prom;}
+	else if (prom < 96)	{p_d->r = 0; 				p_d->g = -128 + 4*prom; 	p_d->b = 255;}
+	else if (prom < 160)	{p_d->r = -384 + 4*prom;	p_d->g = 255; 				p_d->b = 639 - 4*prom;}
+	else if (prom < 224)	{p_d->r = 255; 				p_d->g = 895 - 4*prom;	 	p_d->b = 0;}
+	else 					{p_d->r = 1151 - 4*prom;	p_d->g = 0; 				p_d->b = 0;}}
 
 void temperature_c    (
 	unsigned char *src,
@@ -29,11 +37,3 @@ void temperature_c    (
 			rgb_t *p_s = (rgb_t*)&src_matrix[i_s][j_s*3];
 			temperatura(p_d, p_s->r, p_s->g, p_s->b);}}}
 			
-void temperatura(rgb_t* p_d, unsigned int r, unsigned int g, unsigned int b){
-	unsigned int prom = (r + g + b) / 3;
-
-	if 		 (prom < 32)	{p_d->r = 0; 				p_d->g = 0; 				p_d->b = 128 + 4*prom;}
-	else if (prom < 96)	{p_d->r = 0; 				p_d->g = -128 + 4*prom; 	p_d->b = 255;}
-	else if (prom < 160)	{p_d->r = -384 + 4*prom;	p_d->g = 255; 				p_d->b = 639 - 4*prom;}
-	else if (prom < 224)	{p_d->r = 255; 				p_d->g = 895 - 4*prom;	 	p_d->b = 0;}
-	else 					{p_d->r = 1151 - 4*prom;	p_d->g = 0; 				p_d->b = 0;}}
