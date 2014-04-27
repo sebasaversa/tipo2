@@ -36,7 +36,7 @@ void ldr_c    (
 				unsigned int blue = 0;
 				for( int f = i-2; f  <= (i+2); f++){
 					for( int c = j-2; c <= (j+2); c++){
-						rgb_t *p_p = (rgb_t*) &dst_matrix[f][c * 3];
+						rgb_t *p_p = (rgb_t*) &src_matrix[f][c * 3];
 						red += p_p->r;
 						green += p_p->g;
 						blue += p_p->b;
@@ -45,9 +45,9 @@ void ldr_c    (
 				//aca termino de sumar todos los colores
 					unsigned int sumColores = red + green + blue; //aca tengo la suma de los 3 colores
 					sumColores *= alfa;
-					p_s->r = MIN(MAX( p_s->r + ((p_s->r * sumColores) / max), 0), 255);
-					p_s->g = MIN(MAX( p_s->g + ((p_s->g * sumColores) / max), 0), 255);
-					p_s->b = MIN(MAX( p_s->b + ((p_s->b * sumColores) / max), 0), 255);			
+					p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumColores) / max), 0), 255);
+					p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumColores) / max), 0), 255);
+					p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumColores) / max), 0), 255);			
 			}
         }
     }
