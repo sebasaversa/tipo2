@@ -1,0 +1,28 @@
+%macro iif 3
+	; %1: condicion		; %2: then		; %3: else
+    PUSH RBP
+    MOV RBP, RSP
+    PUSH RAX
+    SUB RSP, 8
+    
+    %if %1
+		%2
+	%else
+		%3
+	%endif
+	
+	ADD RSP, 8
+	POP RAX
+	POP RBP
+	RET
+%endmacro
+
+
+%macro for 5
+	; %1: init_exp1
+	; %2: init_exp2
+	; %3: condicion
+	; %4: crecimiento init_exp1
+	; %5: crecimiento init_exp2
+	
+	
