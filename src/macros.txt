@@ -5,10 +5,10 @@
     PUSH RAX
     SUB RSP, 8
     
-    %if %1
-		%2
+    %if 1=1
+		MOV RDI, 1
 	%else
-		%3
+		MOV RDI, 0
 	%endif
 	
 	ADD RSP, 8
@@ -18,11 +18,39 @@
 %endmacro
 
 
-%macro for 5
+%macro for 3
 	; %1: init_exp1
-	; %2: init_exp2
-	; %3: condicion
-	; %4: crecimiento init_exp1
-	; %5: crecimiento init_exp2
+	; %2: condicion
+	; %3: crecimiento init_exp1
 	
-	
+	;for (int i_ = 0; i < filas; i++) {
+		MOV i, 0	; i
+		.for1:
+		;CONDICION
+		CMP filas, i
+		JG .endfor1 
+				
+		;CODIGO
+		;for (int j = 0; j < cols; j++) {
+			MOV j_d, 0
+			MOV j_s, 0
+			.for2:
+			;CONDICION
+			CMP cols, j_d
+			JG .endfor2 
+			
+			;CODIGO
+			
+			
+			;AUMENTAR Y SEGUIR
+			INC 			
+			JMP .for2
+			
+			.endfor2:
+			;AUMENTAR Y SEGUIR
+			INC i
+			JMP .for1
+		
+		.endfor1:
+		
+%endmacro
