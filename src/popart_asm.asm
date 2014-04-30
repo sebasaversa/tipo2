@@ -3,7 +3,7 @@ global popart_asm
 section .data
 section .rodata
 
-;ALIGN 16 q onda esto
+ALIGN 16 
 pixel0BGR : DB 0x8C, 0x0B, 0x0A, 0x09,
 			DB 0x89, 0x08, 0x07, 0x06,
 			DB 0x86, 0x05, 0x04, 0x03,
@@ -84,7 +84,7 @@ popart_asm:
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
-		JG .endfor1 
+		JGE .endfor1 
 		;CODIGO
 		;for (int j = 0; j < cols; j++) {
 			XOR R11, R11	;R11: j
@@ -92,7 +92,7 @@ popart_asm:
 				;CONDICION
 				;CMP EDX, R11	; EDX: cols
 				CMP R11, RDX	; EDX: cols
-				JG .endfor2 
+				JGE .endfor2 
 				;CODIGO
 				;rgb_t *p_d = (rgb_t*)&dst_matrix[i][j*3];
 				;rgb_t *p_s = (rgb_t2*)&src_matrix[i][j*3];
@@ -104,9 +104,7 @@ popart_asm:
 				LEA RDI, [RDI+12]
 								
 				;AUMENTAR Y SEGUIR
-				INC R11
-				INC R11
-				INC R11			
+				ADD R11, 4				; como agarro 4 pixeles, me corro 4 columnas
 				JMP .for2
 	
 				.endfor2:
@@ -116,10 +114,9 @@ popart_asm:
 		
 		.endfor1:
     
-    
-	POP RBP
 	POP R13
 	POP R12
+	POP RBP
 	RET
 
 
