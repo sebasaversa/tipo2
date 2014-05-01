@@ -20,10 +20,10 @@ pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
 				DB 0x0A, 0x0C, 0x0D, 0x0E,
 				DB 0x80, 0x80, 0x80, 0x80,
 
-seisOnce: 			DD 0x264, 0x264, 0x264, 0x264,		; 611, 611, 611, 611			
-cuatroCincoOcho: 	DD 0x1CB, 0x1CB, 0x1CB, 0x1CB,		; 458, 458, 458, 458, 	
-tresOCinco: 		DD 0x132, 0x132, 0x132, 0x132,		; 305, 305, 305, 305, 	
-unoCincoDos: 		DD 0x99, 0x99, 0x99, 0x99			; 152, 152, 152, 152, 
+seisDoce: 			DD 0x264, 0x264, 0x264, 0x264,		; 612, 612, 612, 612			
+cuatroCincoNueve: 	DD 0x1CB, 0x1CB, 0x1CB, 0x1CB,		; 459, 459, 459, 459, 	
+tresOSeis: 		DD 0x132, 0x132, 0x132, 0x132,		; 306, 306, 306, 306, 	
+unoCincoTres: 		DD 0x99, 0x99, 0x99, 0x99			; 153, 153, 153, 153, 
 
 
 colores0: 			DB  0xFF, 0x0,  0x0, 0x0,	; 255,   0,   0,   0
@@ -81,6 +81,7 @@ popart_asm:
 	MOV RBX, RSI
 	XOR R10, R10	; R10: i
 	.for1:
+		
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
@@ -119,9 +120,12 @@ popart_asm:
 				SUB R11, 3
 				jmp .for2
 				.endfor2:
-
-				;AUMENTAR Y SEGUIR
+				LEA RSI, [RBX + R8]
+				LEA RDI, [RAX + R9]
 				
+				;AUMENTAR Y SEGUIR
+				LEA RAX, [RAX + R8]
+				LEA RBX, [RBX + R9]
 				INC R10
 				JMP .for1
 		
@@ -173,9 +177,15 @@ pop_art:
 	
 	XORPD XMM0, XMM0
 
+	; ponemos colores[0] en su lugar correspondiente	
+	MOVDQU XMM1, [unoCincoTres] 
+	MOVDQU XMM10, [colores0] 			; XMM10: [0|255|0|0] [0|255|0|0] [0|255|0|0] [0|255|0|0]
+	PCMPGTD XMM1, XMM2	
+	PAND XMM1 , XMM10 		; estos pixeles le ponemos colores[0]
+	POR XMM0, XMM1						; ponemos colores0 en donde va en dst
 
 	; ponemos colores[4] en su lugar correspondiente	
-	MOVDQU XMM1, [seisOnce] 
+	MOVDQU XMM1, [seisDoce] 
 	MOVDQU XMM10, [colores4]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
 	PAND XMM2, XMM1
@@ -183,7 +193,7 @@ pop_art:
 	POR XMM0, XMM1				; ponemos colores4 en donde va en dst
 	
 	; ponemos colores[3] en su lugar correspondiente
-	MOVDQU XMM1, [cuatroCincoOcho] 
+	MOVDQU XMM1, [cuatroCincoNueve] 
 	MOVDQU XMM10 , [colores3] 		; estos pixeles le ponemos colores[3]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
 	PAND XMM2, XMM1
@@ -191,7 +201,7 @@ pop_art:
 	POR XMM0, XMM1				; ponemos colores3 en donde va en dst
 	
 	; ponemos colores[2] en su lugar correspondiente
-	MOVDQU XMM1, [tresOCinco] 
+	MOVDQU XMM1, [tresOSeis] 
 	MOVDQU XMM10 ,[colores2] 		; estos pixeles le ponemos colores[2]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
 	PAND XMM2, XMM1
@@ -199,7 +209,7 @@ pop_art:
 	POR XMM0, XMM1				; ponemos colores2 en donde va en dst
 
 	; ponemos colores[1] en su lugar correspondiente
-	MOVDQU XMM1, [unoCincoDos] 
+	MOVDQU XMM1, [unoCincoTres] 
 	MOVDQU XMM10 ,[colores1] 		; estos pixeles le ponemos colores[1]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
 	PAND XMM2, XMM1
@@ -208,11 +218,11 @@ pop_art:
 	
 
 	; ponemos colores[0] en su lugar correspondiente	
-	XORPD XMM1, XMM1
-	MOVDQU XMM10, [colores0] 			; XMM10: [0|255|0|0] [0|255|0|0] [0|255|0|0] [0|255|0|0]
-	PCMPGTD XMM2, XMM1	
-	PAND XMM2 , XMM10 		; estos pixeles le ponemos colores[0]
-	POR XMM0, XMM2						; ponemos colores0 en donde va en dst
+;	XORPD XMM1, XMM1
+;	MOVDQU XMM10, [colores0] 			; XMM10: [0|255|0|0] [0|255|0|0] [0|255|0|0] [0|255|0|0]
+;	PCMPGTD XMM2, XMM1	
+;	PAND XMM2 , XMM10 		; estos pixeles le ponemos colores[0]
+;	POR XMM0, XMM2						; ponemos colores0 en donde va en dst
 
 	
 
