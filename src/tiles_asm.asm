@@ -44,8 +44,6 @@ tiles_asm:
 	
 	PUSH RBP					
 	MOV RBP, RSP
-	PUSH R12
-	PUSH R13
 
 	;unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 	
@@ -82,6 +80,4 @@ tiles_asm:
     
     
 	POP RBP
-	POP R12
-	POP R13
 	RET

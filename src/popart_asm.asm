@@ -3,17 +3,18 @@ global popart_asm
 section .data
 section .rodata
 
+uno: db 0x01, 0x00, 0x00, 0x00
 ALIGN 16 
-pixel0BGR : DB 0x00, 0x01, 0x02, 0x80, 
-			DB 0x03, 0x04, 0x05, 0x80,
-			DB 0x06, 0x07, 0x08, 0x80,
-			DB 0x09, 0x0A, 0x0B, 0x80
+pixel0BGR : DB 0x00, 0x01, 0x02,  0x80,
+			DB 0x03, 0x04, 0x05,  0x80,
+			DB 0x06, 0x07, 0x08,  0x80,
+			DB 0x09, 0x0A, 0x0B,  0x80
 			
-soloPrimero : 	DB 0x01, 0x80, 0x80, 0x80,
-				DB 0x04, 0x80, 0x80, 0x80,
-				DB 0x08, 0x80, 0x80, 0x80,
-				DB 0x0C, 0x80, 0x80, 0x80
-
+soloPrimero : 	DB  0x00, 0x80, 0x80, 0x80,
+				DB  0x04, 0x80, 0x80, 0x80,
+				DB  0x08, 0x80, 0x80, 0x80,
+				DB  0x0C, 0x80, 0x80, 0x80
+		
 pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
 				DB 0x05, 0x06, 0x08, 0x09,
 				DB 0x0A, 0x0C, 0x0D, 0x0E,
@@ -25,26 +26,26 @@ tresOCinco: 		DD 0x131, 0x131, 0x131, 0x131,		; 305, 305, 305, 305,
 unoCincoDos: 		DD 0x98, 0x98, 0x98, 0x98			; 152, 152, 152, 152, 
 
 
-colores0: 			DB 0xFF, 0x0, 0x0, 0x0,		; 255,   0,   0
-					DB 0xFF, 0x0, 0x0, 0x0,		; 255,   0,   0
-					DB 0xFF, 0x0, 0x0, 0x0,		; 255,   0,   0
-					DB 0xFF, 0x0, 0x0, 0x0		; 255,   0,   0
-colores1: 			DB 0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127			
-					DB 0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127			
-					DB 0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127			
-					DB 0x7F, 0x0, 0x7F, 0x0		; 127,   0, 127			
-colores2: 			DB 0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255			
-					DB 0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255
-					DB 0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255
-					DB 0xFF, 0x0, 0xFF, 0x0		; 255,   0, 255
-colores3: 			DB 0x0, 0x0, 0xFF, 0x0,		; 0,   0, 255			
-					DB 0x0, 0x0, 0xFF, 0x0,		; 0,   0, 255			
-					DB 0x0, 0x0, 0xFF, 0x0,		; 0,   0, 255			
-					DB 0x0, 0x0, 0xFF, 0x0		; 0,   0, 255			
-colores4: 			DB 0x0, 0xFF, 0xFF,	0x0,	; 0, 255, 255			
-					DB 0x0, 0xFF, 0xFF,	0x0,	; 0, 255, 255			
-					DB 0x0, 0xFF, 0xFF,	0x0,	; 0, 255, 255			
-					DB 0x0, 0xFF, 0xFF, 0x0		; 0, 255, 255			
+colores0: 			DB  0xFF, 0x0,  0x0, 0x0,	; 255,   0,   0,   0
+					DB  0xFF, 0x0,  0x0, 0x0,	; 255,   0,   0,   0
+					DB  0xFF, 0x0,  0x0, 0x0,	; 255,   0,   0,   0
+					DB  0xFF, 0x0,  0x0, 0x0	; 255,   0,   0,   0
+colores1: 			DB  0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127		,   0	
+					DB  0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127			,   0
+					DB  0x7F, 0x0, 0x7F, 0x0,	; 127,   0, 127			,   0
+					DB 	0x7F, 0x0, 0x7F, 0x0	; 127,   0, 127			,   0
+colores2: 			DB  0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255			,   0
+					DB  0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255,   0
+					DB  0xFF, 0x0, 0xFF, 0x0,	; 255,   0, 255,   0
+					DB 	0xFF, 0x0, 0xFF, 0x0	; 255,   0, 255,   0
+colores3: 			DB 	0x0, 0x0, 0xFF,  0x0,	; 0,   0, 255			,   0
+					DB 	0x0, 0x0, 0xFF,  0x0,	; 0,   0, 255			,   0
+					DB 	0x0, 0x0, 0xFF,  0x0,	; 0,   0, 255			,   0
+					DB 	0x0, 0x0, 0xFF,	 0x0	; 0,   0, 255			,   0
+colores4: 			DB  0x0, 0xFF, 0xFF, 0x0,	; 0, 255, 255			,   0
+					DB  0x0, 0xFF, 0xFF, 0x0,	; 0, 255, 255			,   0
+					DB  0x0, 0xFF, 0xFF, 0x0,	; 0, 255, 255			,   0
+					DB 	0x0, 0xFF, 0xFF, 0x0	; 0, 255, 255			,   0
 	
 
 section .text
@@ -127,61 +128,77 @@ pop_art:
 	PUSH RBP					
 	MOV RBP, RSP
 	
-	MOVDQU XMM0, [RDI]	; coloco los primeros 16bytes de la imagen en XMM1
+	MOVDQU XMM0, [RDI]	; R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
 	
 	; VER COMO FUNCIONA ESTE SHUFFLE
-	MOVDQA XMM7, [pixel0BGR]
-	PSHUFB XMM0, XMM7		 	; ordeno en el registro los pixels de forma 0BGR (tengo 4 pixeles)
-	MOVDQU XMM2, XMM0					; XMM2: 0|B|G|R|0|B|G|R|0|B|G|R|0|B|G|R 	copio los 4 pixeles
-	PSHUFB XMM2, [soloPrimero]			; XMM2: 0|0|0|R|0|0|0|R|0|0|0|R|0|0|0|R
-	MOVDQU XMM3, XMM0					; XMM3: 0|B|G|R|0|B|G|R|0|B|G|R|0|B|G|R 	copio los 4 pixeles
-	PSLLD XMM3, 8						; XMM3: 0|0|B|G|0|0|B|G|0|0|B|G|0|0|B|G
-	PSHUFB XMM3, [soloPrimero]			; XMM3: 0|0|0|G|0|0|0|G|0|0|0|G|0|0|0|G
-	MOVDQU XMM4, XMM0					; XMM4: 0|B|G|R|0|B|G|R|0|B|G|R|0|B|G|R 	copio los 4 pixeles
-	PSLLD XMM4, 16						; XMM4: 0|0|0|B|0|0|0|B|0|0|0|B|0|0|0|B
-	; Ahora podemos hacer suma
-	PADDD XMM2, XMM3
-	PADDD XMM2, XMM4					; XMM2: [0|0|0|R+G+B] [0|0|0|R+G+B] [0|0|0|R+G+B] [0|0|0|R+G+B]
-	
-	; ponemos colores[0] en su lugar correspondiente
-	MOVDQU XMM1, [unoCincoDos] 
-	PCMPGTD XMM1, XMM2
-	MOVDQU XMM10, [colores0] 
-	PANDN XMM1, XMM10
-	POR XMM2, XMM1				; ponemos colores0 en donde va en dst
 
-	; ponemos colores[1] en su lugar correspondiente
-	MOVDQU XMM1, [unoCincoDos] 
-	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
-	MOVDQU XMM10, [colores1]
-	PAND XMM1 ,XMM10 		; estos pixeles le ponemos colores[4]
-	POR XMM2, XMM1				; ponemos colores1 en donde va en dst
+	XORPD XMM2, XMM2
+	XORPD XMM3, XMM3
+	XORPD XMM4, XMM4
+	MOVDQA XMM7, [pixel0BGR]
+	PSHUFB XMM0, XMM7		 			; ordeno en el registro los pixels de forma 0RGB (tengo 4 pixeles)
+	MOVDQU XMM2, XMM0					; XMM2: R|G|B|0|R|G|B|0|R|G|B|0|R|G|B|0 	
+	PSHUFB XMM2, [soloPrimero]			; XMM2: R|0|0|0|R|0|0|0|R|0|0|0|R|0|0|0		; solo dejamos azul para 'suma'
+	MOVDQU XMM3, XMM0					; XMM3: R|G|B|0|R|G|B|0|R|G|B|0|R|G|B|0 	
+	PSRLD XMM3, 8						; XMM3: G|B|0|0|G|B|0|0|G|B|0|0|G|B|0|0		
+	PSHUFB XMM3, [soloPrimero]			; XMM3: G|0|0|0|G|0|0|0|G|0|0|0|G|0|0|0		; solo dejamos verde para 'suma'
+	MOVDQU XMM4, XMM0					; XMM4: R|G|B|0|R|G|B|0|R|G|B|0|R|G|B|0 	
+	PSRLD XMM4, 16						; XMM4: B|0|0|0|B|0|0|0|B|0|0|0|B|0|0|0		; solo dejamos rojo para 'suma'
+	; Ahora podemos hacer suma
+	PADDW XMM2, XMM3
+	PADDW XMM2, XMM4					; XMM2: dword[R+G+B] dword[R+G+B] dword[R+G+B] dword[R+G+B]
 	
-	; ponemos colores[2] en su lugar correspondiente
-	MOVDQU XMM1, [tresOCinco] 
+	XORPD XMM0, XMM0
+
+
+	; ponemos colores[4] en su lugar correspondiente	
+	MOVDQU XMM1, [seisOnce] 
+	MOVDQU XMM10, [colores4]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
-	PAND XMM1 ,[colores2] 		; estos pixeles le ponemos colores[4]
-	POR XMM2, XMM1				; ponemos colores2 en donde va en dst
+	PAND XMM2, XMM1
+	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[4]
+	POR XMM0, XMM1				; ponemos colores4 en donde va en dst
 	
 	; ponemos colores[3] en su lugar correspondiente
 	MOVDQU XMM1, [cuatroCincoOcho] 
+	MOVDQU XMM10 , [colores3] 		; estos pixeles le ponemos colores[3]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
-	MOVDQU XMM10, [colores3]
-	PAND XMM1 , XMM10 		; estos pixeles le ponemos colores[4]
-	POR XMM2, XMM1				; ponemos colores3 en donde va en dst
+	PAND XMM2, XMM1
+	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[3]
+	POR XMM0, XMM1				; ponemos colores3 en donde va en dst
 	
-	; ponemos colores[4] en su lugar correspondiente
-	MOVDQU XMM1, [seisOnce] 
+	; ponemos colores[2] en su lugar correspondiente
+	MOVDQU XMM1, [tresOCinco] 
+	MOVDQU XMM10 ,[colores2] 		; estos pixeles le ponemos colores[2]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
-	MOVDQU XMM10, [colores4]
-	PAND XMM1 , XMM10 		; estos pixeles le ponemos colores[4]
-	POR XMM2, XMM1				; ponemos colores4 en donde va en dst
+	PAND XMM2, XMM1
+	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[2]
+	POR XMM0, XMM1				; ponemos colores2 en donde va en dst
+
+	; ponemos colores[1] en su lugar correspondiente
+	MOVDQU XMM1, [unoCincoDos] 
+	MOVDQU XMM10 ,[colores1] 		; estos pixeles le ponemos colores[1]
+	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
+	PAND XMM2, XMM1
+	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[1]
+	POR XMM0, XMM1				; ponemos colores1 en donde va en dst
+	
+
+	; ponemos colores[0] en su lugar correspondiente	
+	XORPD XMM1, XMM1
+	MOVDQU XMM10, [colores0] 			; XMM10: [0|255|0|0] [0|255|0|0] [0|255|0|0] [0|255|0|0]
+	PCMPGTD XMM2, XMM1	
+	PAND XMM2 , XMM10 		; estos pixeles le ponemos colores[0]
+	POR XMM0, XMM2						; ponemos colores0 en donde va en dst
+
+	
+
 	
 	;ahora en XMM2 tenemos dst con los colores finales
 	;sacamos los ceros para que queden pixeles de 3 bytes
 	MOVDQU XMM10, [pixelFinal]
-	PSHUFB XMM2, XMM10
-	MOVDQU XMM0, XMM2
+	PSHUFB XMM0, XMM10
+	;MOVDQU XMM0, XMM2
 	
 	POP RBP
 	RET
