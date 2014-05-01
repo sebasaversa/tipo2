@@ -20,10 +20,10 @@ pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
 				DB 0x0A, 0x0C, 0x0D, 0x0E,
 				DB 0x80, 0x80, 0x80, 0x80,
 
-seisOnce: 			DD 0x264, 0x264, 0x264, 0x264,		; 611, 611, 611, 611			
-cuatroCincoOcho: 	DD 0x1CB, 0x1CB, 0x1CB, 0x1CB,		; 458, 458, 458, 458, 	
-tresOCinco: 		DD 0x132, 0x132, 0x132, 0x132,		; 305, 305, 305, 305, 	
-unoCincoDos: 		DD 0x99, 0x99, 0x99, 0x99			; 152, 152, 152, 152, 
+seisOnce: 			DD 0x263, 0x263, 0x263, 0x263,		; 611, 611, 611, 611			
+cuatroCincoOcho: 	DD 0x1CA, 0x1CA, 0x1CA, 0x1CA,		; 458, 458, 458, 458, 	
+tresOCinco: 		DD 0x131, 0x131, 0x131, 0x131,		; 305, 305, 305, 305, 	
+unoCincoDos: 		DD 0x98, 0x98, 0x98, 0x98			; 152, 152, 152, 152, 
 
 
 colores0: 			DB  0xFF, 0x0,  0x0, 0x0,	; 255,   0,   0,   0
@@ -105,8 +105,6 @@ popart_asm:
 								
 				;AUMENTAR Y SEGUIR
 				ADD R11, 4				; como agarro 4 pixeles, me corro 4 columnas
-				CMP R11, RDX
-				JE .endfor2
 				;CMP R11, RDX
 				;JGE .endfor2
 				;VEMOS SI TOCAMOS PADDING
@@ -114,12 +112,22 @@ popart_asm:
 				ADD R12, 4
 				CMP R12, RDX
 				JLE .for2
-				LEA RSI, [RSI-9]
-				LEA RDI, [RDI-9]
-				SUB R11, 3
-				jmp .for2
+				MOV R13, RDX
+				SUB R13, 4
+				MOV R15, R13
+				ADD R15, R15
+				ADD R15, R13
+				
+				LEA RSI, [RAX + R15]
+				LEA RDI, [RBX + R15]
+				MOV R11, R13
+				
+				CALL pop_art
+				MOVDQU [RSI], XMM0
 				.endfor2:
 
+				LEA RSI, [RAX + R8]
+				LEA RDI, [RBX + R9]
 				;AUMENTAR Y SEGUIR
 				
 				INC R10
