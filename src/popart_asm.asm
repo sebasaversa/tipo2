@@ -3,7 +3,7 @@ global popart_asm
 section .data
 section .rodata
 
-uno: db 0x01, 0x00, 0x00, 0x00
+; VEMOS CADA PIXEL COMO SI FUERAN 4 BYTES Y PROCESAMOS DE A 4 PIXELES
 ALIGN 16 
 pixel0BGR : DB 0x00, 0x01, 0x02,  0x80,
 			DB 0x03, 0x04, 0x05,  0x80,
@@ -216,13 +216,6 @@ pop_art:
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[1]
 	POR XMM0, XMM1				; ponemos colores1 en donde va en dst
 	
-
-	; ponemos colores[0] en su lugar correspondiente	
-;	XORPD XMM1, XMM1
-;	MOVDQU XMM10, [colores0] 			; XMM10: [0|255|0|0] [0|255|0|0] [0|255|0|0] [0|255|0|0]
-;	PCMPGTD XMM2, XMM1	
-;	PAND XMM2 , XMM10 		; estos pixeles le ponemos colores[0]
-;	POR XMM0, XMM2						; ponemos colores0 en donde va en dst
 
 	
 
