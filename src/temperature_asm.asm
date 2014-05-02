@@ -15,8 +15,8 @@ soloPrimero : 	DB  0x00, 0x80, 0x80, 0x80,
 				DB  0x08, 0x80, 0x80, 0x80,
 				DB  0x80, 0x80, 0x80, 0x80
 
-shuffleCaverna:	DW 0x00, 0x02, 0x04, 0x80
-				DW 0x80, 0x80, 0x80, 0x80,
+;shuffleCaverna:	DW 0x00, 0x02, 0x04, 0x80
+;				DW 0x80, 0x80, 0x80, 0x80,
 
 shuffleCaverna2:DB  0x00, 0x01, 0x02, 0x03,
 				DB  0x08, 0x09, 0x0A, 0x0B,
@@ -174,23 +174,32 @@ temp_aux:
 	XORPD XMM5, XMM5
 	; suma / 3
 	MOV R12, 3
+	MOV R13, 1
 	CVTDQ2PS XMM2, XMM2
 	XORPD XMM0, XMM0
 	CVTSI2SS XMM0, R12
+	CVTSI2SS XMM1, R13
 	; PARA EXTENDER EL 3 A LOS PACKS DEL XMM5
 	XORPD XMM5, XMM5
+	ADDSS XMM5, XMM1
+	PSLLDQ XMM5, 4
 	ADDSS XMM5, XMM0
-	PSLLDQ XMM5, 8
+	PSLLDQ XMM5, 4
+	ADDSS XMM5, XMM1
+	PSLLDQ XMM5, 4
 	ADDSS XMM5, XMM0
-		
+	
+	; Paso XMM5 a float	
+	;CVTDQ2PS XMM5, XMM5
 	DIVPS XMM2, XMM5					; XMM2: prom
-
+	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	
 	XORPD XMM0, XMM0
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
-
-	; ponemos colores[0] en su lugar correspondiente	
+	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
+	; ponemos colores[0] en su lugar correspondiente	{128 + 4t, 0, 0}
+	
 	MOVDQU XMM1, [tresDos] 
 	MOVDQU XMM10, [colores0] 			; XMM10: qword[128(+4T)] qword[128(+4T)] 
 	PCMPGTD XMM1, XMM2	
@@ -222,8 +231,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[A|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[A|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna]
-	PSHUFB XMM6, [shuffleCaverna]
+	;PSHUFB XMM10, [shuffleCaverna]
+	;PSHUFB XMM6, [shuffleCaverna]
 	;XMM10 == qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -241,7 +250,7 @@ temp_aux:
 	;/////////////////////////////r//////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	; ponemos colores[4] en su lugar correspondiente	
+	; ponemos colores[4] en su lugar correspondiente	{  0, 0, 1151 -4t}
 	MOVDQU XMM1, [dosDosCuatro] 
 	MOVDQU XMM10, [colores4]
 	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
@@ -257,9 +266,9 @@ temp_aux:
 	CVTSI2SS XMM14, R12
 	XORPD XMM5, XMM5
 	PADDQ XMM5, XMM14
-	PSLLDQ XMM5, 7
+	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	PSLLDQ XMM5, 5
+	PSLLDQ XMM5, 4
 	
 	MULPS XMM6, XMM5	; XMM6: qword[0|0|0|0|4T|0|0|0] qword[0|0|0|0|4T|0|0|0]
 	
@@ -276,8 +285,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna]
-	PSHUFB XMM6, [shuffleCaverna]
+	PSHUFB XMM10, [shuffleCaverna2]
+	PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -330,8 +339,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna]
-	PSHUFB XMM6, [shuffleCaverna]
+	PSHUFB XMM10, [shuffleCaverna2]
+	PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -401,8 +410,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna]
-	PSHUFB XMM6, [shuffleCaverna]
+	PSHUFB XMM10, [shuffleCaverna2]
+	PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -466,8 +475,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna]
-	PSHUFB XMM6, [shuffleCaverna]
+	PSHUFB XMM10, [shuffleCaverna2]
+	PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
