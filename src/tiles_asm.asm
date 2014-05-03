@@ -155,6 +155,7 @@ tiles_asm:
 				SUB R15, RAX
 				CMP R15, RAX
 				JG .cicloDiv
+				JB .muevoRecuadro
 				.inicioTiles:
 				LEA RDI, [R12]
 				LEA R13, [RDI]
