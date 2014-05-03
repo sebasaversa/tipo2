@@ -23,8 +23,10 @@ shuffleCaverna2:DB  0x00, 0x01, 0x02, 0x03,
 				DB  0x80, 0x80, 0x80, 0x80,
 				DB  0x80, 0x80, 0x80, 0x80
 				
-pixelFinal :	DW 0x00, 0x01, 0x02, 0x04
-				DW 0x05, 0x06, 0x08, 0x09,
+pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
+				DB 0x05, 0x06, 0x08, 0x09,
+				DB 0x80, 0x80, 0x80, 0x80,
+				DB 0x80, 0x80, 0x80, 0x80,
 				
 dosDosCuatro: 	DQ 0xE1, 0xE1						; 225, 225, 225, 225			
 unoSeisCero: 	DQ 0xA1, 0xA1						; 161, 161, 161, 161 	
@@ -112,7 +114,7 @@ temperature_asm:
 				JLE .for2
 				LEA RSI, [RSI-3]
 				LEA RDI, [RDI-3]
-				SUB R11, 3
+				SUB R11, 1
 				jmp .for2
 				.endfor2:
 				LEA RSI, [RBX + R8]
@@ -192,6 +194,8 @@ temp_aux:
 	; Paso XMM5 a float	
 	;CVTDQ2PS XMM5, XMM5
 	DIVPS XMM2, XMM5					; XMM2: prom
+	MOVDQU XMM12, XMM2
+	CVTTPS2DQ XMM12, XMM12
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	
 	XORPD XMM0, XMM0
@@ -202,7 +206,7 @@ temp_aux:
 	
 	MOVDQU XMM1, [tresDos] 
 	MOVDQU XMM10, [colores0] 			; XMM10: qword[128(+4T)] qword[128(+4T)] 
-	PCMPGTD XMM1, XMM2	
+	PCMPGTD XMM1, XMM12	
 	;XMM10: colores[0] nos falta agregar 4T
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
@@ -253,12 +257,11 @@ temp_aux:
 	; ponemos colores[4] en su lugar correspondiente	{  0, 0, 1151 -4t}
 	MOVDQU XMM1, [dosDosCuatro] 
 	MOVDQU XMM10, [colores4]
-	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
+	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
 	
 	;XMM10: colores[4] nos falta agregar 4T
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
-	PSLLDQ XMM6, 4
 	;XMM6: [0|0|0|0|T|0|0|0] [0|0|0|0|T|0|0|0]
 	;PARA MULTIPLICAR POR 4
 	MOV R12, 4
@@ -270,9 +273,11 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 4
 	
-	MULPS XMM6, XMM5	; XMM6: qword[0|0|0|0|4T|0|0|0] qword[0|0|0|0|4T|0|0|0]
+	MULPS XMM6, XMM5	; XMM6: qword[T|0|0|0|0|0|0|0] qword[T|0|0|0|0|0|0|0]
 	
 	CVTTPS2DQ XMM6, XMM6
+	PSLLDQ XMM6, 4
+	;XMM6: qword[0|0|0|0|4T|0|0|0] qword[0|0|0|0|4T|0|0|0]
 	
 	XORPD XMM15, XMM15
 	; A: 1151 - 4T
@@ -285,8 +290,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna2]
-	PSHUFB XMM6, [shuffleCaverna2]
+	;PSHUFB XMM10, [shuffleCaverna2]
+	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -298,7 +303,7 @@ temp_aux:
 	PSHUFB XMM10, [shuffleCaverna2]
 	;XMM10 == dword{[RGA0][RGA0][0000][0000]}
 	
-	PAND XMM2, XMM1
+	PAND XMM12, XMM1
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[4]
 	POR XMM0, XMM1				; ponemos colores4 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,14 +312,12 @@ temp_aux:
 	; ponemos colores[3] en su lugar correspondiente     0, 895 - 4t, 255
 	MOVDQU XMM1, [unoSeisCero] 
 	MOVDQU XMM10 , [colores3] 		; estos pixeles le ponemos colores[3]
-	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
+	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
 	
 	;XMM10: colores[3] nos falta agregar 4T
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
 	;XMM6: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
-	PSLLDQ XMM6, 2
-	;XMM6: [0|0|T|0|0|0|0|0] [0|0|T|0|0|0|0|0]
 	;PARA MULTIPLICAR POR 4
 	MOV R12, 4
 	CVTSI2SS XMM14, R12
@@ -322,11 +325,12 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	PSLLDQ XMM5, 2
+	;PSLLDQ XMM5, 2
 	
-	MULPS XMM6, XMM5	; XMM6: qword[0|0|4T|0|0|0|0|0] qword[0|0|4T|0|0|0|0|0]
+	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
 	
 	CVTTPS2DQ XMM6, XMM6
+	PSLLDQ XMM6, 2
 	
 	; A: 895 - 4T
 	; XMM6: 	qword[0|0|4T|0|0|0|0|0] 		qword[0|0|4T|0|0|0|0|0]
@@ -339,8 +343,8 @@ temp_aux:
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna2]
-	PSHUFB XMM6, [shuffleCaverna2]
+	;PSHUFB XMM10, [shuffleCaverna2]
+	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -352,7 +356,7 @@ temp_aux:
 	PSHUFB XMM10, [shuffleCaverna2]
 	;XMM10 == dword{[RAB0][RAB0][0000][0000]}
 	
-	PAND XMM2, XMM1
+	PAND XMM12, XMM1
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[3]
 	POR XMM0, XMM1				; ponemos colores3 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -361,7 +365,7 @@ temp_aux:
 
 	MOVDQU XMM1, [nueveSeis] 
 	MOVDQU XMM10 ,[colores2] 		; estos pixeles le ponemos colores[2]
-	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
+	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
 	
 	;XMM10: colores[3] nos falta agregar 4T
 	; XMM10: 	qword[639 (- 4T) |0|255|0|4T(-384)|0|0|0] 	qword[639 (- 4T) |0|255|0|4T(-384)|0|0|0]
@@ -380,7 +384,7 @@ temp_aux:
 	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
 	
 	CVTTPS2DQ XMM6, XMM6
-	
+	MOVDQU XMM11, XMM6
 	; A: 639 - 4T
 	; B: 4T - 384
 	; XMM6: 	qword[4T|0|0|0|0|0|0|0] 		qword[4T|0|0|0|0|0|0|0]
@@ -400,18 +404,19 @@ temp_aux:
 	PSLLDQ XMM5, 4
 	; XMM5: 	qword[0|0|0|0|384|0|0|0] 	qword[0|0|0|0|384|0|0|0]
 	PSUBUSW XMM10, XMM5
+	;PSUBUSW XMM10, XMM11
 	; XMM10: 	qword[639-4T|0|255|0|4T-384|0|0|0] 		qword[639-4T|0|255|0|4T-384|0|0|0]
 	
 	
 	MOVDQU XMM6, XMM10
-	;XMM10 == XMM6 == qword[4T+128] qword[4T+128]
+	;XMM10 == XMM6 == dqword[639-4T|0|255|0|4T-384|0|0|0]
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna2]
-	PSHUFB XMM6, [shuffleCaverna2]
+	;PSHUFB XMM10, [shuffleCaverna2]
+	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -424,7 +429,7 @@ temp_aux:
 	;XMM10 == dword{[RAB0][RAB0][0000][0000]}
 
 
-	PAND XMM2, XMM1
+	PAND XMM12, XMM1
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[2]
 	POR XMM0, XMM1				; ponemos colores2 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,14 +437,13 @@ temp_aux:
 	; ponemos colores[1] en su lugar correspondiente		{255, -128 + 4t, 0}
 	MOVDQU XMM1, [tresDos] 
 	MOVDQU XMM10 ,[colores1] 		; estos pixeles le ponemos colores[1]
-	PCMPGTD XMM1, XMM2			; en XMM1 tenemos unos donde se cumple la condicion
+	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
 	
 	;XMM10: colores[1] nos falta agregar 4T - 128
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
 	;XMM6: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
-	PSLLDQ XMM6, 2
-	;XMM6: [0|0|T|0|0|0|0|0] [0|0|T|0|0|0|0|0]
+	;XMM6: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	;PARA MULTIPLICAR POR 4
 	MOV R12, 4
 	CVTSI2SS XMM14, R12
@@ -448,14 +452,17 @@ temp_aux:
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 2
-	MULPS XMM6, XMM5	; XMM6: qword[0|0|4T|0|0|0|0|0] qword[0|0|4T|0|0|0|0|0]
+	MULPS XMM6, XMM5	; XMM6: qword[T|0|0|0|0|0|0|0] qword[T|0|0|0|0|0|0|0]
 	
 	CVTTPS2DQ XMM6, XMM6
+	PSLLDQ XMM6, 2
+	; XMM6: qword[0|0|4T|0|0|0|0|0] qword[0|0|4T|0|0|0|0|0]
 	
 	; A: 4T - 128
 	; XMM6: 	qword[0|0|4T|0|0|0|0|0] 		qword[0|0|4T|0|0|0|0|0]
 	; XMM10: 	qword[255|0|(4T - 128)|0|0|0|0|0] 	qword[255|0|(4T - 128)|0|0|0|0|0]
 	PADDUSW XMM10, XMM6
+	; XMM10: 	qword[255|0|4T (- 128)|0|0|0|0|0] 	qword[255|0|4T (- 128)|0|0|0|0|0]
 	; AGREGO EL 128 PACKED PARA RESTARLO
 	MOV R12, 128
 	MOVQ XMM14, R12
@@ -469,14 +476,14 @@ temp_aux:
 	; XMM10: 	qword[255|0|4T - 128|0|0|0|0|0] 	qword[255|0|4T - 128|0|0|0|0|0]
 	
 	MOVDQU XMM6, XMM10
-	;XMM10 == XMM6 == qword[4T+128] qword[4T+128]
+	;XMM10 == XMM6 == qword[4T-128] qword[4T-128]
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
 	;XMM10 == dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
 	;XMM6 ==  dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	PSHUFB XMM10, [shuffleCaverna2]
-	PSHUFB XMM6, [shuffleCaverna2]
+	;PSHUFB XMM10, [shuffleCaverna2]
+	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
@@ -489,7 +496,7 @@ temp_aux:
 	;XMM10 == dword{[RAB0][RAB0][0000][0000]}
 
 	
-	PAND XMM2, XMM1
+	PAND XMM12, XMM1
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[1]
 	POR XMM0, XMM1				; ponemos colores1 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
