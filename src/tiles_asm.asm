@@ -45,7 +45,7 @@ tiles_asm:
 	PUSH RBP					
 	MOV RBP, RSP
 	
-	LEA R12, [RDI]
+	
 	XOR R10, R10
 	MOV R10D, [RBP+32] ; coloco offsetX
 	XOR R11, R11
@@ -79,6 +79,7 @@ tiles_asm:
 	XOR R14, R14
 	XOR R15, R15
 	LEA R13, [RDI]
+	LEA R12, [RDI]
 	MOV R14, 0	; R14: i
 	.for1:
 		;CONDICION
@@ -155,7 +156,7 @@ tiles_asm:
 				CMP R15, RAX
 				JG .cicloDiv
 				.inicioTiles:
-				LEA RDI, [R8]
+				LEA RDI, [R12]
 				LEA R13, [RDI]
 				JMP .muevoDST
 				
