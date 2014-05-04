@@ -107,15 +107,16 @@ tiles_asm:
 				;rgb_t *p_s = (rgb_t*)&src_matrix[(i % tamy) + offsety][((j*3) % (tamx*3)) + (offsetx*3)];
 				;*p_d = *p_s;}}}
 				
+				
 				MOVDQU XMM0, [RDI]
 				MOVDQU [RSI], XMM0
 				
+	
 				CMP R10D, [RBP+16]
 				JB .mePaseTile
 				XOR R10, R10
 				LEA RDI, [R13]
-				
-	
+				JMP .for2
 				
 				;R10 CUENTA EL PIXEL DEL RECUADRO
 				.mePaseTile:
@@ -149,6 +150,7 @@ tiles_asm:
 				
 				.endfor2:
 				
+				INC R14
 				XOR RAX, RAX
 				XOR R15, R15
 				MOV EAX, [RBP + 24] ;TAM Y
@@ -179,7 +181,7 @@ tiles_asm:
 				SUB R15, R9
 				LEA RSI, [RSI + R15]
 				
-				INC R14
+				
 				
 				JMP .for1
 		
