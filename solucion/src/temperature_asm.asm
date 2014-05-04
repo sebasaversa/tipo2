@@ -312,7 +312,7 @@ temp_aux:
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	; ponemos colores[3] en su lugar correspondiente     0, 895 - 4t, 255
+	; ponemos colores[3] en su lugar correspondiente     {0, 895 - 4t, 255}
 	MOVDQU XMM10 , [colores3] 		; estos pixeles le ponemos colores[3]
 	
 	;XMM10: colores[3] nos falta agregar 4T
@@ -454,7 +454,6 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	PSLLDQ XMM5, 2
 	MULPS XMM6, XMM5	; XMM6: qword[T|0|0|0|0|0|0|0] qword[T|0|0|0|0|0|0|0]
 	
 	CVTTPS2DQ XMM6, XMM6
@@ -503,7 +502,7 @@ temp_aux:
 		
 	PAND XMM12, XMM1
 	PSHUFB XMM1, [shuffleCaverna2]
-	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[1]
+	PANDN XMM1 , XMM10 			; estos pixeles le ponemos colores[1]
 	POR XMM0, XMM1				; ponemos colores1 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -514,7 +513,6 @@ temp_aux:
 	;sacamos los ceros para que queden pixeles de 3 bytes
 	MOVDQU XMM10, [pixelFinal]
 	PSHUFB XMM0, XMM10
-	;MOVDQU XMM0, XMM2
 	
 	POP R13
 	POP R12
