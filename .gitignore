@@ -26,5 +26,5 @@ tp*
 *.bmp
 corridas.txt
 
-
+**/documentos
 **/solucion
