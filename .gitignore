@@ -20,7 +20,9 @@
 *.out
 *.app
 tp*
+*.sh
 
 #Imagenes
 *.bmp
 
+**/solucion
