@@ -85,32 +85,8 @@ ldr_asm:
 			;				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
 			;				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
 							
-					LEA RDI, [RDI - 6]
-					MOVDQU XMM1, [RDI]
-					
-					LEA RDI, [RDI + R8]
-					MOVDQU XMM2, [RDI]
-					MOV R9, R8
-					
-					LEA RDI, [RDI + R8]
-					MOVDQU XMM3, [RDI]
-					ADD R9, R8
-					
-					LEA RDI, [RDI + R8]
-					MOVDQU XMM4, [RDI]
-					MOV R9, R8
-					
-					LEA RDI, [RDI + R8]
-					MOVDQU XMM5, [RDI]
-					MOV R9, R8
-					
-					LEA RDI, [RDI + 6]
-					LEA RDI, [RDI - R9]
-					
-					PADDB XMM1, XMM2
-					PADDB XMM1, XMM3
-					PADDB XMM1, XMM4
-					PADDB XMM1, XMM5		; XMM1: tiene 5 pixeles  
+
+					CALL ldr_aux
 					
 					;*p_d = colores[s];}}}					
 					MOVDQU [RSI], XMM0
@@ -150,3 +126,34 @@ ldr_asm:
  	POP RBP
 	RET
  
+
+ldr_aux:
+
+
+		LEA RDI, [RDI - 6]
+		MOVDQU XMM1, [RDI]
+		
+		LEA RDI, [RDI + R8]
+		MOVDQU XMM2, [RDI]
+		MOV R9, R8
+		
+		LEA RDI, [RDI + R8]
+		MOVDQU XMM3, [RDI]
+		ADD R9, R8
+		
+		LEA RDI, [RDI + R8]
+		MOVDQU XMM4, [RDI]
+		MOV R9, R8
+		
+		LEA RDI, [RDI + R8]
+		MOVDQU XMM5, [RDI]
+		MOV R9, R8
+		
+		LEA RDI, [RDI + 6]
+		LEA RDI, [RDI - R9]		;restauro RDI a donde estaba
+		
+		PADDB XMM1, XMM2
+		PADDB XMM1, XMM3
+		PADDB XMM1, XMM4
+		PADDB XMM1, XMM5		; XMM1: tiene la suma de 5 pixeles  
+
