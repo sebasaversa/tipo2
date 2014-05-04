@@ -108,7 +108,10 @@ ldr_asm:
 					LEA RDI, [RDI - R9]
 					
 					PADDB XMM1, XMM2
-					CALL ldr_aux		; XMM0: 5 pixeles que van en dst*
+					PADDB XMM1, XMM3
+					PADDB XMM1, XMM4
+					PADDB XMM1, XMM5		; XMM1: tiene 5 pixeles  
+					
 					;*p_d = colores[s];}}}					
 					MOVDQU [RSI], XMM0
 					LEA RSI, [RSI+15]
