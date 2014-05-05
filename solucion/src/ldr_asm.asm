@@ -100,7 +100,7 @@ ldr_asm:
 			;				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
 							
 
-					CALL ldr_aux
+					CALL sumaRGB
 					
 					;*p_d = colores[s];}}}					
 					MOVDQU [RSI], XMM0
@@ -141,8 +141,14 @@ ldr_asm:
 	RET
  
 
-ldr_aux:
-
+sumaRGB:
+	
+	PUSH RBP					
+	MOV RBP, RSP
+	PUSH R12
+	PUSH R13
+	PUSH R14
+	PUSH R15
 
 		LEA RDI, [RDI - 6]
 		LEA RDI, [RDI - R8]
@@ -356,3 +362,11 @@ ldr_aux:
 		; XMM7: [sumargb(deLos25Pixeles) |basura |basura |basura |basura |basura |basura |basura]
 		;sumargb *= alfa;
 		PMULUDQ XMM7, [RBP + 16]
+
+	POP R15
+	POP R14
+ 	POP R13
+ 	POP R12
+ 	POP RBP
+	RET
+ 
