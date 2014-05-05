@@ -2,7 +2,19 @@
 global ldr_asm
 
 section .data
+section .rodata
 
+
+ALIGN 16 
+C000 : 		DB 0x00, 0x80, 0x80,  0x80,
+			DB 0x01, 0x80, 0x80,  0x80,
+			DB 0x02, 0x80, 0x80,  0x80,
+			DB 0x80, 0x80, 0x80,  0x80
+			
+RGB : 		DB 0x00, 0x04, 0x08,  0x80,
+			DB 0x80, 0x80, 0x80,  0x80,
+			DB 0x80, 0x80, 0x80,  0x80,
+			DB 0x80, 0x80, 0x80,  0x80
 section .text
 ;void ldr_c    (
 ;    unsigned char *src,     RDI
@@ -100,19 +112,61 @@ ldr_asm:
 					MOVDQU XMM0, [RDI]
 					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O] , FALTA HACER MASCARA C000
 					MUL [RBP+16] ; RAX = RAX * [RBP+16]
-					MULPS XMM0, RAX
-					DIVPS XMM0, max ;FALTA HACER LA MULTIPLICACION DE MAX
+					
+					;ALFA * SUMA * SRC
+					MOV R12, RAX
+					XORPD XMM14, XMM14
+					MOVQ XMM14, R12
+					XORPD XMM5, XMM5
+					PADDQ XMM5, XMM14 
+					PSLLDQ XMM5, 4 
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14 
+					CVTDQ2PS XMM5, XMM5 
+					MULPS XMM0, XMM5
+					;ALFA * SUMA * SRC / MAX
+					MOV R12, 4876875
+					XORPD XMM14, XMM14
+					MOVQ XMM14, R12
+					XORPD XMM5, XMM5
+					PADDQ XMM5, XMM14 
+					PSLLDQ XMM5, 4 
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14 
+					CVTDQ2PS XMM5, XMM5 
+					DIVPS XMM0, XMM5
+					
 					MOVDQU XMM1, [RDI]
 					PSHUFB XMM1, [COOO]
-					PXOR XMM2, XMM2
+					ADDPS XMM0, XMM1 ;VAR + SRC
+					XORPD XMM2, XMM2
 					PCMPGTW XMM2, XMM1 ;VEO QUIENES SON MAS GRANDES QUE 0
 					PAND XMM1, XMM2 ;HAGO AND PARA PONER EN 0 A LOS MENORES A 0
-					MOVDQU XMM2, [255] ; TENGO QUE PONER 255 EN TODO
+					
+					;XMM2 = [255,255,255,255]
+					MOV R12, 255
+					XORPD XMM14, XMM14
+					MOVQ XMM14, R12
+					XORPD XMM5, XMM5
+					PADDQ XMM5, XMM14 
+					PSLLDQ XMM5, 4 
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14
+					PSLLDQ XMM5, 4
+					PADDQ XMM5, XMM14
+					MOVDQU XMM6, XMM5 
 					PCMPGTW XMM2, XMM1
 					PANDN XMM1, XMM2 ; PONOGO EN 0 LOS QUE SON MAYORES A 255
-					MOVDQU XMM2, [255]
-					POR XMM1, XMM2
-					
+					MOVDQU XMM6, [255]
+					POR XMM0, XMM2
+					PSHUFB XMM0, [RGB]
 					;sumargb *= alfa;
 					;p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
 	;				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
