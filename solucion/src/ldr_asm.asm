@@ -93,35 +93,32 @@ ldr_asm:
 					
 	;				for( int f = i-2; f  <= (i+2); f++){
 						;for( int c = j-2; c <= (j+2); c++){
-			;				unsigned int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
-			;				sumargb *= alfa;
-			;				p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
-			;				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
-			;				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
+		;				unsigned int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
 							
 
 					CALL sumaRGB
-					
+					MOVDQU XMM0, [RDI]
+					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O]
+					MUL [RBP+16] ; RAX = RAX * [RBP+16]
+					MULPD XMM0, RAX
+					DIVPD
+					;sumargb *= alfa;
+					;p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
+	;				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
+	;				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
 					;*p_d = colores[s];}}}					
+
+					;DEJAR EN XMM0 EL  PIXEL QUE VAMOS A ESCRIBIR
 					MOVDQU [RSI], XMM0
-					LEA RSI, [RSI+15]
-					LEA RDI, [RDI+15]
+					LEA RSI, [RSI+3]
+					LEA RDI, [RDI+3]
 									
 					;AUMENTAR Y SEGUIR
-					ADD R11, 5				; como agarro 5 pixeles, me corro 5 columnas
-					CMP R11, RDX
-					JE .endfor2
-					;CMP R11, RDX
-					;JGE .endfor2
+					ADD R11, 1				; como agarro 1 pixel, me corro 1 columna
 					;VEMOS SI TOCAMOS PADDING
-					MOV R12, R11
-					ADD R12, 2
-					CMP R12, RDX
-					JLE .for2
-					LEA RSI, [RSI-3]
-					LEA RDI, [RDI-3]
-					SUB R11, 1
-					jmp .for2
+					CMP R11, RDX
+					JL .for2
+					
 				.endfor2:
 					LEA RSI, [RBX + R8]
 					LEA RDI, [RAX + R9]
@@ -360,9 +357,8 @@ sumaRGB:
 		PADDW XMM7, XMM9
 
 		; XMM7: [sumargb(deLos25Pixeles) |basura |basura |basura |basura |basura |basura |basura]
-		;sumargb *= alfa;
-		PMULUDQ XMM7, [RBP + 16]
-
+		MOVDQU XMM0, XMM7
+		
 	POP R15
 	POP R14
  	POP R13
