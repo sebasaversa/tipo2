@@ -107,7 +107,7 @@ ldr_asm:
 						;for( int c = j-2; c <= (j+2); c++){
 		;				unsigned int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
 							
-
+					
 					CALL sumaRGB
 					MOVDQU XMM0, [RDI]
 					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O] , FALTA HACER MASCARA C000
@@ -212,9 +212,7 @@ sumaRGB:
 	PUSH R14
 	PUSH R15
 
-		LEA RDI, [RDI - 6]
-		LEA RDI, [RDI - R8]
-		LEA RDI, [RDI - R8]
+
 		MOVDQU XMM1, [RDI]
 		;XMM1: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R1$|G14|B14|R15|G15|B15|0]
 		
@@ -229,15 +227,11 @@ sumaRGB:
 		LEA RDI, [RDI + R8]
 		MOVDQU XMM4, [RDI]
 		;XMM4: [R41|G41|B41|R42|G42|B42|R43|G43|B43|R44|G44|B44|R45|G45|B45|0]
-		MOV R9, R8               
-				                 
+        
 		LEA RDI, [RDI + R8]      
 		MOVDQU XMM5, [RDI]       
 		;XMM5: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
-		ADD R9, R8
 		
-		LEA RDI, [RDI + 6]
-		LEA RDI, [RDI - R9]		;restauro RDI a donde estaba
 		
 		;//////////////////////////////////////////////////////////////////////////////
 		;///////////////////		SUMO LAS FILAS 1 Y 2 			///////////////////
@@ -262,7 +256,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM2, XMM15
 		;XMM12:  [R21|0	|G21|0	|B21|0	|R22|0	|G22|0	|B22|0	|R23|0	|G23|0]
 		;XMM2:  [B23|0	|R24|0	|G24|0	|B24|0	|R25|0	|G25|0	|B25|0	|0  |0]
-		PADD XMM12, XMM2
+		PADDW XMM12, XMM2
 		;XMM12 : [R21+B23 |G21+R24 |B21+G24 |R22+B24 |G22+R25 |B22+G25 |R23+B25 |G23+0]
 		;XMM7:  [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		PHADDW XMM7, XMM12
@@ -310,7 +304,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM1, XMM15
 		;XMM8: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADD XMM8, XMM1
+		PADDW XMM8, XMM1
 		;XMM8: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 4
@@ -367,7 +361,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM1, XMM15
 		;XMM9: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADD XMM9, XMM1
+		PADDW XMM9, XMM1
 		;XMM9: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 6 (creo una con todos ceros)
@@ -379,7 +373,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM6, XMM15
 		;XMM12: [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
 		;XMM6:  [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
-		PADD XMM12, XMM6
+		PADDW XMM12, XMM6
 		;XMM12 : [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
 		;XMM9:   [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		PHADDW XMM9, XMM12
