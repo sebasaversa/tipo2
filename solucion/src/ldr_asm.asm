@@ -66,7 +66,21 @@ ldr_asm:
 				;CONDICION
 				;CMP EDX, R11	; EDX: cols
 				CMP R11, RDX	; EDX: cols
-				JGE .endfor2 
+				JGE .endfor2
+				
+				CMP R10, 2 ;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
+				JGE .else
+				CMP R11, 2 ;VEO SI ESTOY EN LAS PRIMERAS 2 COLUMNAS
+				JGE .else
+				MOV R12, RCX 
+				SUB R12, R10 ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 FILAS
+				CMP R12, 2
+				JBE .else
+				MOV R12, RDX ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 COLUMNAS
+				SUB R12, R11
+				CMP R12, 2
+				JBE .else
+				 
 				;CODIGO
 	;            if(i < 2 || j < 2 || i+2 > filas - 1 || j+2 > cols - 1){
 	;				*p_d = *p_s;}
