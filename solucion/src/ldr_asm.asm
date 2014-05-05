@@ -92,11 +92,28 @@ ldr_asm:
 				SUB R12, R11
 				CMP R12, 2
 				JBE .else
-				 
+				
+				
+				MOVDQU XMM0, [RDI]
+				MOV [RSI], XMM0
+				MOV R11, R13
+				ADD R13, 4
+				CMP R13, RDX
+				JG .agregoMenos
+				LEA RDI, [RDI + 12]
+				LEA RSI, [RSI + 12]
+				ADD R11, 4
+				JMP .For2
+				
+				.agregoMenos:
+				LEA RDI, [RDI+3]
+				LEA RSI, [RSI+3]
+				ADD R11, 1
+				JMP .for2
 				;CODIGO
 	;            if(i < 2 || j < 2 || i+2 > filas - 1 || j+2 > cols - 1){
 	;				*p_d = *p_s;}
-	
+				
 				.else:
 	;			else{		
 	;				unsigned int red = 0;
