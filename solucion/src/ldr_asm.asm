@@ -9,7 +9,7 @@ section .rodata
 
 
 ALIGN 16 
-C000 : 		DB 0x00, 0x80, 0x80,  0x80,
+COOO : 		DB 0x00, 0x80, 0x80,  0x80,
 			DB 0x01, 0x80, 0x80,  0x80,
 			DB 0x02, 0x80, 0x80,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80
@@ -26,7 +26,7 @@ section .text
 ;    int filas,              RCX
 ;    int src_row_size,       R8
 ;    int dst_row_size,       R9
-;	int alfa)				 [RBP + 16]
+;	int alfa)				 [RBP + 40]
 ;{
 ;    unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 ;    unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
@@ -65,12 +65,10 @@ ldr_asm:
 	PUSH R15
 	
     ;for (int i = 0; i < filas; i++) {
-    ;-------------
-	MOV RAX, RDI
-	MOV RBX, RSI
-	;LEA RBX, [RDI]
-	;LEA R15, [RDI]
-	;-------------
+
+	LEA RBX, [RDI]
+	LEA R15, [RDI]
+
 	XOR R10, R10	; R10: i
 	.for1:
 		
@@ -94,29 +92,20 @@ ldr_asm:
 				MOV R12, RCX 
 				SUB R12, R10 ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 FILAS
 				CMP R12, 2
-				JBE .else
+				JB .else
 				MOV R12, RDX ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 COLUMNAS
 				SUB R12, R11
 				CMP R12, 2
-				JBE .else
+				JB .else
 				
 				
 				MOVDQU XMM0, [RDI]
-				MOV [RSI], XMM0
-				MOV R11, R13
-				ADD R13, 4
-				CMP R13, RDX
-				JG .agregoMenos
-				LEA RDI, [RDI + 12]
-				LEA RSI, [RSI + 12]
-				ADD R11, 4
-				JMP .For2
-				
-				.agregoMenos:
-				LEA RDI, [RDI+3]
-				LEA RSI, [RSI+3]
+				MOVDQU [RSI], XMM0
+				LEA RDI, [RDI + 3]
+				LEA RSI, [RSI + 3]
 				ADD R11, 1
 				JMP .for2
+				
 				;CODIGO
 	;            if(i < 2 || j < 2 || i+2 > filas - 1 || j+2 > cols - 1){
 	;				*p_d = *p_s;}
@@ -134,8 +123,8 @@ ldr_asm:
 					
 					CALL sumaRGB
 					MOVDQU XMM0, [RDI]
-					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O] , FALTA HACER MASCARA C000
-					MUL [RBP+16] ; RAX = RAX * [RBP+16]
+					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O] 
+					MUL word[RBP+40] ; RAX = RAX * [RBP+40]
 					
 					;ALFA * SUMA * SRC
 					MOV R12, RAX
@@ -150,6 +139,7 @@ ldr_asm:
 					PSLLDQ XMM5, 4
 					PADDQ XMM5, XMM14 
 					CVTDQ2PS XMM5, XMM5 
+					CVTDQ2PS XMM0, XMM0 
 					MULPS XMM0, XMM5
 					;ALFA * SUMA * SRC / MAX
 					MOV R12, 4876875
@@ -170,10 +160,9 @@ ldr_asm:
 					PSHUFB XMM1, [COOO]
 					ADDPS XMM0, XMM1 ;VAR + SRC
 					XORPD XMM2, XMM2
-					PCMPGTW XMM2, XMM1 ;VEO QUIENES SON MAS GRANDES QUE 0
-					PAND XMM1, XMM2 ;HAGO AND PARA PONER EN 0 A LOS MENORES A 0
+					PCMPGTD XMM2, XMM0 ;VEO QUIENES SON MAS GRANDES QUE 0
+					PANDN XMM0, XMM2 ;HAGO AND PARA PONER EN 0 A LOS MENORES A 0
 					
-					;XMM2 = [255,255,255,255]
 					MOV R12, 255
 					XORPD XMM14, XMM14
 					MOVQ XMM14, R12
@@ -184,12 +173,29 @@ ldr_asm:
 					PSLLDQ XMM5, 4
 					PADDQ XMM5, XMM14
 					PSLLDQ XMM5, 4
-					PADDQ XMM5, XMM14
-					MOVDQU XMM6, XMM5 
-					PCMPGTW XMM2, XMM1
-					PANDN XMM1, XMM2 ; PONOGO EN 0 LOS QUE SON MAYORES A 255
-					MOVDQU XMM6, [255]
-					POR XMM0, XMM2
+					PADDQ XMM5, XMM14 
+					
+					;XMM0 = [MAX(p_s->r + ((p_s->r * sumargb) / max)), , , ]
+					;XMM0 = [ 300 , , , ]
+					;XMM5 = [255,255,255,255]
+					PCMPGTW XMM5, XMM0
+					;XMM5 = [255,0,0,255]
+					PAND XMM0, XMM5 
+					PANDN XMM5, XMM5	
+					MOV R12, 255
+					XORPD XMM14, XMM14
+					MOVQ XMM14, R12
+					XORPD XMM6, XMM6
+					PADDQ XMM6, XMM14 
+					PSLLDQ XMM6, 4 
+					PADDQ XMM6, XMM14
+					PSLLDQ XMM6, 4
+					PADDQ XMM6, XMM14
+					PSLLDQ XMM6, 4
+					PADDQ XMM6, XMM14 
+					;XMM6 = [255] [255] [255] [255]
+					pand XMM5, XMM6
+					POR XMM0, XMM5
 					PSHUFB XMM0, [RGB]
 					;sumargb *= alfa;
 					;p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
@@ -205,44 +211,49 @@ ldr_asm:
 					;AUMENTAR Y SEGUIR
 					ADD R11, 1				; como agarro 1 pixel, me corro 1 columna
 					;VEMOS SI TOCAMOS PADDING
+					
 					CMP R11, RDX
-					;----------------------
-					;LEA R15, [R15 + 1] R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
-					;----------------------
+					
+					LEA R15, [R15 + 3] ; R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
+					
 					
 					JL .for2
 					
 				.endfor2:
-					;----------------------
-					LEA RSI, [RBX + R8]
-					LEA RDI, [RAX + R9]
+
 					
 					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
 					;COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
 					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
-					;XOR RAX, RAX
-					;MOV R12, RDX
-					;MOV RAX, RDX
-					;ADD RAX, RAX
-					;ADD R12, RAX
-					;SUB R12, R9
-					;LEA RSI, [RSI + R12]
+					XOR RAX, RAX
+					MOV R12, RDX
+					MOV RAX, RDX
+					ADD RAX, RAX
+					ADD R12, RAX
+					MOV RAX, R9
+					SUB RAX, R12
+					LEA RSI, [RSI + RAX]
 					
-					;XOR RAX, RAX
-					;MOV R12, RDX
-					;MOV RAX, RDX
-					;ADD RAX, RAX
-					;ADD R12, RAX
-					;SUB R12, R8
-					;LEA RDI, [RDI + R12]
+					XOR RAX, RAX
+					MOV R12, RDX
+					MOV RAX, RDX
+					ADD RAX, RAX
+					ADD R12, RAX
+					MOV RAX, R8
+					SUB RAX, R12
+					LEA RDI, [RDI + RAX]
 					
-					;LEA RBX, [R15 + R8]
-					;LEA R15, [RBX]
-					;----------------------
+
+					INC R10
+					CMP R10, 3
+					JB .for1
+
+					LEA RBX, [RBX + R8]
+					LEA R15, [RBX]
+
 				;AUMENTAR Y SEGUIR
-				LEA RAX, [RAX + R8]
-				LEA RBX, [RBX + R9]
-				INC R10
+
+				
 				JMP .for1
 		
 		.endfor1:
@@ -263,24 +274,25 @@ sumaRGB:
 	PUSH R14
 	PUSH R15
 
-
-		MOVDQU XMM1, [RDI]
+		;RDI : puntero al pixel que estoy mirando
+		;R15 ; puntero al pixel que estoy mirando - (2,2)
+		MOVDQU XMM1, [R15]
 		;XMM1: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R1$|G14|B14|R15|G15|B15|0]
 		
-		LEA RDI, [RDI + R8]
-		MOVDQU XMM2, [RDI]
+		LEA R15, [R15 + R8]
+		MOVDQU XMM2, [R15]
 		;XMM2: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
 				
-		LEA RDI, [RDI + R8]
-		MOVDQU XMM3, [RDI]
+		LEA R15, [R15 + R8]
+		MOVDQU XMM3, [R15]
 		;XMM3: [R31|G31|B31|R32|G32|B32|R33|G33|B33|R34|G34|B34|R35|G35|B35|0]
 				
-		LEA RDI, [RDI + R8]
+		LEA R15, [R15 + R8]
 		MOVDQU XMM4, [RDI]
 		;XMM4: [R41|G41|B41|R42|G42|B42|R43|G43|B43|R44|G44|B44|R45|G45|B45|0]
         
-		LEA RDI, [RDI + R8]      
-		MOVDQU XMM5, [RDI]       
+		LEA R15, [R15 + R8]      
+		MOVDQU XMM5, [R15]       
 		;XMM5: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
 		
 		
@@ -296,7 +308,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM1, XMM15
 		;XMM7: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADD XMM7, XMM1
+		PADDW XMM7, XMM1
 		;XMM7: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 2
@@ -366,7 +378,7 @@ sumaRGB:
 		PUNPCKHQDQ XMM4, XMM15
 		;XMM12:  [R21|0	|G21|0	|B21|0	|R22|0	|G22|0	|B22|0	|R23|0	|G23|0]
 		;XMM4:  [B23|0	|R24|0	|G24|0	|B24|0	|R25|0	|G25|0	|B25|0	|0  |0]
-		PADD XMM12, XMM4
+		PADDW XMM12, XMM4
 		;XMM12 : [R21+B23 |G21+R24 |B21+G24 |R22+B24 |G22+R25 |B22+G25 |R23+B25 |G23+0]
 		;XMM8:  [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		PHADDW XMM8, XMM12
