@@ -1,4 +1,7 @@
-
+;LINEA 68 CAMBIO LOS OTROS PUNTEROS CREADOS
+;LINEA 209 VOY AUMENTANDO EN 1 EL PUNTERO R15
+;LINEA 216 CUANDO TERMINA EL FOR2 HAGO LAS RESPECTIVAS SUMAS DE LOS PUNTEROS
+;NO LO CAMBIE PERO EN sumarRGB LOS XMM1...5 SE HARIAN CON R15 Y ESTA PUSHEADO ASI QUE NO SE PIERDE EL ORIGINAL
 global ldr_asm
 
 section .data
@@ -62,8 +65,12 @@ ldr_asm:
 	PUSH R15
 	
     ;for (int i = 0; i < filas; i++) {
+    ;-------------
 	MOV RAX, RDI
 	MOV RBX, RSI
+	;LEA RBX, [RDI]
+	;LEA R15, [RDI]
+	;-------------
 	XOR R10, R10	; R10: i
 	.for1:
 		
@@ -199,12 +206,39 @@ ldr_asm:
 					ADD R11, 1				; como agarro 1 pixel, me corro 1 columna
 					;VEMOS SI TOCAMOS PADDING
 					CMP R11, RDX
+					;----------------------
+					;LEA R15, [R15 + 1] R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
+					;----------------------
+					
 					JL .for2
 					
 				.endfor2:
+					;----------------------
 					LEA RSI, [RBX + R8]
 					LEA RDI, [RAX + R9]
-				
+					
+					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
+					;COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
+					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
+					;XOR RAX, RAX
+					;MOV R12, RDX
+					;MOV RAX, RDX
+					;ADD RAX, RAX
+					;ADD R12, RAX
+					;SUB R12, R9
+					;LEA RSI, [RSI + R12]
+					
+					;XOR RAX, RAX
+					;MOV R12, RDX
+					;MOV RAX, RDX
+					;ADD RAX, RAX
+					;ADD R12, RAX
+					;SUB R12, R8
+					;LEA RDI, [RDI + R12]
+					
+					;LEA RBX, [R15 + R8]
+					;LEA R15, [RBX]
+					;----------------------
 				;AUMENTAR Y SEGUIR
 				LEA RAX, [RAX + R8]
 				LEA RBX, [RBX + R9]
