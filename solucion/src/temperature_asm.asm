@@ -9,7 +9,7 @@ pixel0BGR : DB 0x00, 0x80, 0x01,  0x80,
 			DB 0x02, 0x80, 0x80,  0x80,
 			DB 0x03, 0x80, 0x04,  0x80,
 			DB 0x05, 0x80, 0x80,  0x80
-			
+
 soloPrimero : 	DB  0x00, 0x80, 0x80, 0x80,
 				DB  0x80, 0x80, 0x80, 0x80,
 				DB  0x08, 0x80, 0x80, 0x80,
@@ -22,17 +22,17 @@ shuffleCaverna2:DB  0x00, 0x01, 0x02, 0x03,
 				DB  0x08, 0x09, 0x0A, 0x0B,
 				DB  0x80, 0x80, 0x80, 0x80,
 				DB  0x80, 0x80, 0x80, 0x80
-				
+
 pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
 				DB 0x05, 0x06, 0x08, 0x09,
 				DB 0x80, 0x80, 0x80, 0x80,
 				DB 0x80, 0x80, 0x80, 0x80,
-				
+
 dosDosCuatro: 	DQ 0xE1, 0xE1						; 225, 225, 225, 225			
 unoSeisCero: 	DQ 0xA1, 0xA1						; 161, 161, 161, 161 	
 nueveSeis: 		DQ 0x61, 0x61						; 97, 97, 97, 97, 	
 tresDos: 		DQ 0x21, 0x21						; 33, 33, 33, 33, 
-			
+
 colores0: 			DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0	 			,   0
 					DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0				,   0
 colores1: 			DW  0xFF, 0x0, 0x0, 0x0,				; 255		,   (4T-128)	, 0				,   0	
@@ -43,7 +43,7 @@ colores3: 			DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
 					DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
 colores4: 			DW  0x0, 0X0, 0x47F, 0x0,				; 0			,	0			, 1151 (- 4T)	,   0
 					DW  0x0, 0X0, 0x47F, 0x0				; 0			,	0			, 1151 (- 4T)	,   0
-	
+
 
 section .text
 
@@ -72,13 +72,13 @@ temperature_asm:
 	PUSH R13
 	PUSH R14
 	PUSH R15
-	
+
     ;for (int i = 0; i < filas; i++) {
 	MOV RAX, RDI
 	MOV RBX, RSI
 	XOR R10, R10	; R10: i
 	.for1:
-		
+
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
@@ -100,7 +100,7 @@ temperature_asm:
 				MOVDQU [RSI], XMM0
 				LEA RSI, [RSI+6]
 				LEA RDI, [RDI+6]
-								
+
 				;AUMENTAR Y SEGUIR
 				ADD R11, 2				; como agarro 2 pixeles, me corro 2 columnas
 				CMP R11, RDX
@@ -119,13 +119,13 @@ temperature_asm:
 				.endfor2:
 				LEA RSI, [RBX + R8]
 				LEA RDI, [RAX + R9]
-				
+
 				;AUMENTAR Y SEGUIR
 				LEA RAX, [RAX + R8]
 				LEA RBX, [RBX + R9]
 				INC R10
 				JMP .for1
-		
+
 		.endfor1:
 	POP R15
 	POP R14
@@ -147,14 +147,14 @@ temp_aux:
 ;	
 ;	return res;}
 	;RDI: src*
-	
+
 	PUSH RBP					
 	MOV RBP, RSP
 	PUSH R12
 	PUSH R13
-	
+
 	MOVDQU XMM0, [RDI]	; R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
-	
+
 	; VER COMO FUNCIONA ESTE SHUFFLE
 
 	XORPD XMM2, XMM2
@@ -172,7 +172,7 @@ temp_aux:
 	; Ahora podemos hacer suma
 	PADDQ XMM2, XMM3
 	PADDQ XMM2, XMM4					; XMM2: qword[R+G+B] qword[R+G+B] 
-	
+
 	XORPD XMM5, XMM5
 	; suma / 3
 	MOV R12, 3
@@ -190,7 +190,7 @@ temp_aux:
 	ADDSS XMM5, XMM1
 	PSLLDQ XMM5, 4
 	ADDSS XMM5, XMM0
-	
+
 	; Paso XMM5 a float	
 	;CVTDQ2PS XMM5, XMM5
 	CVTDQ2PS XMM2, XMM2
@@ -198,13 +198,13 @@ temp_aux:
 	MOVDQU XMM12, XMM2					; XMM12: prom (float)
 	CVTTPS2DQ XMM12, XMM12
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
-	
+
 	XORPD XMM0, XMM0
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	; ponemos colores[0] en su lugar correspondiente	{128 + 4t, 0, 0}
-	
+
 	MOVDQU XMM10, [colores0] 			; XMM10: qword[128(+4T)] qword[128(+4T)] 
 
 	;XMM10: colores[0] nos falta agregar 4T
@@ -220,12 +220,12 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	
+
 	CVTDQ2PS XMM5, XMM5
 	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
-	
+
 	CVTTPS2DQ XMM6, XMM6
-	
+
 	; A: 4T + 128
 	; XMM6: 	qword[4T|0|0|0|0|0|0|0] 		qword[4T|0|0|0|0|0|0|0]
 	; XMM10: 	qword[128(+4T)|0|0|0|0|0|0|0] 	qword[128(+4T)|0|0|0|0|0|0|0]
@@ -249,7 +249,7 @@ temp_aux:
 	;empaquete saturando word a byte para reducir el tamanio de A de 2 bytes a 1 byte
 	PSHUFB XMM10, [shuffleCaverna2]
 	;XMM10 == dword{[AGB0][AGB0][0000][0000]}
-	
+
 	MOVDQU XMM1, [tresDos] 
 	PCMPGTD XMM1, XMM12	
 	PSHUFB XMM1, [shuffleCaverna2]
@@ -261,7 +261,7 @@ temp_aux:
 
 	; ponemos colores[4] en su lugar correspondiente	{  0, 0, 1151 -4t}
 	MOVDQU XMM10, [colores4]
-	
+
 	;XMM10: colores[4] nos falta agregar 4T
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0] (tipo float)
 	MOVDQU XMM6, XMM2
@@ -274,14 +274,14 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	
+
 	CVTDQ2PS XMM5, XMM5
 	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
-	
+
 	CVTTPS2DQ XMM6, XMM6
 	PSLLDQ XMM6, 4
 	;XMM6: qword[0|0|0|0|4T|0|0|0] qword[0|0|0|0|4T|0|0|0]
-	
+
 	XORPD XMM15, XMM15
 	; A: 1151 - 4T
 	; XMM6: 	qword[0|0|0|0|4T|0|0|0] 		qword[0|0|0|0|4T|0|0|0]
@@ -308,17 +308,17 @@ temp_aux:
 
 	MOVDQU XMM1, [dosDosCuatro] 
 	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
-	
+
 	PAND XMM12, XMM1			; seteo en 0 los que ya use para no pisarlos despues
 	PSHUFB XMM1, [shuffleCaverna2]
 	PANDN XMM1 , XMM10 			; estos pixeles le ponemos colores[4]
 	POR XMM0, XMM1				; ponemos colores4 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	; ponemos colores[3] en su lugar correspondiente     {0, 895 - 4t, 255}
 	MOVDQU XMM10 , [colores3] 		; estos pixeles le ponemos colores[3]
-	
+
 	;XMM10: colores[3] nos falta agregar 4T
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
@@ -331,13 +331,13 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-		
+
 	CVTDQ2PS XMM5, XMM5
 	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
-	
+
 	CVTTPS2DQ XMM6, XMM6
 	PSLLDQ XMM6, 2
-	
+
 	; A: 895 - 4T
 	; XMM6: 	qword[0|0|4T|0|0|0|0|0] 		qword[0|0|4T|0|0|0|0|0]
 	; XMM10: 	qword[0|0|895(-4T)|0|255|0|0|0] 	qword[0|0|895(-4T)|0|255|0|0|0]
@@ -361,10 +361,10 @@ temp_aux:
 	;empaquete saturando word a byte para reducir el tamanio de A de 2 bytes a 1 byte
 	PSHUFB XMM10, [shuffleCaverna2]
 	;XMM10 == dword{[RAB0][RAB0][0000][0000]}
-	
+
 	MOVDQU XMM1, [unoSeisCero] 
 	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
-	
+
 	PAND XMM12, XMM1
 	PSHUFB XMM1, [shuffleCaverna2]
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[3]
@@ -374,7 +374,7 @@ temp_aux:
 	; ponemos colores[2] en su lugar correspondiente		{639 -4t, 255, -384 + 4t},	
 
 	MOVDQU XMM10 ,[colores2] 		; estos pixeles le ponemos colores[2]
-	
+
 	;XMM10: colores[3] nos falta agregar 4T
 	; XMM10: 	qword[639 (- 4T) |0|255|0|4T(-384)|0|0|0] 	qword[639 (- 4T) |0|255|0|4T(-384)|0|0|0]
 
@@ -389,10 +389,10 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	
+
 	CVTDQ2PS XMM5, XMM5	
 	MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
-	
+
 	CVTTPS2DQ XMM6, XMM6
 	MOVDQU XMM11, XMM6
 	; A: 639 - 4T
@@ -417,8 +417,8 @@ temp_aux:
 	PSUBUSW XMM10, XMM5
 	;PSUBUSW XMM10, XMM11
 	; XMM10: 	qword[639-4T|0|255|0|4T-384|0|0|0] 		qword[639-4T|0|255|0|4T-384|0|0|0]
-	
-	
+
+
 	MOVDQU XMM6, XMM10
 	;XMM10 == XMM6 == dqword[639-4T|0|255|0|4T-384|0|0|0]
 	XORPD XMM15, XMM15
@@ -441,7 +441,7 @@ temp_aux:
 
 	MOVDQU XMM1, [nueveSeis] 
 	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
-	
+
 	PAND XMM12, XMM1
 	PSHUFB XMM1, [shuffleCaverna2]
 	PANDN XMM1 , XMM10 		; estos pixeles le ponemos colores[2]
@@ -450,7 +450,7 @@ temp_aux:
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	; ponemos colores[1] en su lugar correspondiente		{255, -128 + 4t, 0}
 	MOVDQU XMM10 ,[colores1] 		; estos pixeles le ponemos colores[1]
-	
+
 	;XMM10: colores[1] nos falta agregar 4T - 128
 	;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
 	MOVDQU XMM6, XMM2
@@ -464,14 +464,14 @@ temp_aux:
 	PADDQ XMM5, XMM14
 	PSLLDQ XMM5, 8
 	PADDQ XMM5, XMM14
-	
+
 	CVTDQ2PS XMM5, XMM5	
 	MULPS XMM6, XMM5	; XMM6: qword[T|0|0|0|0|0|0|0] qword[T|0|0|0|0|0|0|0]
-	
+
 	CVTTPS2DQ XMM6, XMM6
 	PSLLDQ XMM6, 2
 	; XMM6: qword[0|0|4T|0|0|0|0|0] qword[0|0|4T|0|0|0|0|0]
-	
+
 	; A: 4T - 128
 	; XMM6: 	qword[0|0|4T|0|0|0|0|0] 		qword[0|0|4T|0|0|0|0|0]
 	; XMM10: 	qword[255|0|(4T - 128)|0|0|0|0|0] 	qword[255|0|(4T - 128)|0|0|0|0|0]
@@ -489,7 +489,7 @@ temp_aux:
 	; XMM5: 	qword[0|0|128|0|0|0|0|0] 	qword[0|0|128|0|0|0|0|0]
 	PSUBUSW XMM10, XMM5
 	; XMM10: 	qword[255|0|4T - 128|0|0|0|0|0] 	qword[255|0|4T - 128|0|0|0|0|0]
-	
+
 	MOVDQU XMM6, XMM10
 	;XMM10 == XMM6 == qword[4T-128] qword[4T-128]
 	XORPD XMM15, XMM15
@@ -512,21 +512,21 @@ temp_aux:
 
 	MOVDQU XMM1, [tresDos] 
 	PCMPGTD XMM1, XMM12			; en XMM1 tenemos unos donde se cumple la condicion
-		
+
 	PAND XMM12, XMM1
 	PSHUFB XMM1, [shuffleCaverna2]
 	PANDN XMM1 , XMM10 			; estos pixeles le ponemos colores[1]
 	POR XMM0, XMM1				; ponemos colores1 en donde va en dst
 	;///////////////////////////////////////////////////////////////////////////////////////////////////
 	;///////////////////////////////////////////////////////////////////////////////////////////////////	
-	
 
-	
+
+
 	;ahora en XMM2 tenemos dst con los colores finales
 	;sacamos los ceros para que queden pixeles de 3 bytes
 	MOVDQU XMM10, [pixelFinal]
 	PSHUFB XMM0, XMM10
-	
+
 	POP R13
 	POP R12
 	POP RBP
