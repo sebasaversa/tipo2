@@ -13,7 +13,7 @@ COOO : 		DB 0x00, 0x80, 0x80,  0x80,
 			DB 0x01, 0x80, 0x80,  0x80,
 			DB 0x02, 0x80, 0x80,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80
-			
+ALIGN 16 
 RGB : 		DB 0x00, 0x04, 0x08,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80,
@@ -26,7 +26,7 @@ section .text
 ;    int filas,              RCX
 ;    int src_row_size,       R8
 ;    int dst_row_size,       R9
-;	int alfa)				 [RBP + 40]
+;	int alfa)				 [RSP + 48]
 ;{
 ;    unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 ;    unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
@@ -80,66 +80,39 @@ ldr_asm:
 		;for (int j = 0; j < cols; j++) {
 			XOR R11, R11	;R11: j
 			.for2:
-				;CONDICION
-				;CMP EDX, R11	; EDX: cols
-				CMP R11, RDX	; EDX: cols
-				JGE .endfor2
-				
-				CMP R10, 2 ;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
-				JGE .cmp1
-				MOV R12, RCX 
-				SUB R12, R10 ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 FILAS
-				CMP R12, 2
-				JB .cmp2
-				
-				
-				
-				.copioIgual:
-				MOVDQU XMM0, [RDI]
-				MOVDQU [RSI], XMM0
-				LEA RDI, [RDI + 3]
-				LEA RSI, [RSI + 3]
-				ADD R11, 1
-				JMP .for2
-				
-				.cmp1:
-				CMP R11, 2 ;VEO SI ESTOY EN LAS PRIMERAS 2 COLUMNAS
-				JGE .else
-				JMP .copioIgual
-				
-				.cmp2:
-				MOV R12, RDX ;VEO QUE TAN LEJOS ESTOY DE LAS ULTIMAS 2 COLUMNAS
-				SUB R12, R11
-				CMP R12, 2
-				JB .else
-				JMP .copioIgual
-				
-				;CODIGO
-	;            if(i < 2 || j < 2 || i+2 > filas - 1 || j+2 > cols - 1){
-	;				*p_d = *p_s;}
-				
-				.else:
-	;			else{		
-	;				unsigned int red = 0;
-	;				unsigned int green = 0;
-	;				unsigned int blue = 0;
-					
-	;				for( int f = i-2; f  <= (i+2); f++){
-						;for( int c = j-2; c <= (j+2); c++){
-		;				unsigned int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
-							
 					
 					CALL sumaRGB
 					;XMM0 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
-					MOVDQU XMM5, XMM0
-					MOVDQU XMM0, [RDI]
-					PSHUFB XMM0, [COOO] ; XMM0 = [R|0|0|0][G|O|O|O][B|O|O|O][O|O|O|O] 
-					MUL word[RBP+40] ; RAX = RAX * [RBP+40]
-					
-					;ALFA * SUMA * SRC
-					CVTDQ2PS XMM5, XMM5 
-					CVTDQ2PS XMM0, XMM0 
-					MULPS XMM0, XMM5
+					MOVDQU XMM5, XMM0		; XMM5 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
+					XORPD XMM14, XMM14
+					PUNPCKHWD XMM5, XMM14 	; XMM5 = [sumaRGB |sumaRGB |sumaRGB |sumaRGB] 
+					MOVDQU XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
+					PSHUFB XMM0, [COOO] 	; XMM0 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
+					MOVDQU XMM2, XMM0
+					;PARA MULTIPLICAR POR ALFA
+					XOR R12, R12
+					MOV R12, [RSP + 48]
+					XORPD XMM14, XMM14
+					MOVQ XMM14, R12
+					XORPD XMM1, XMM1
+					PADDQ XMM1, XMM14
+					PSLLDQ XMM1, 4
+					PADDQ XMM1, XMM14
+					PSLLDQ XMM1, 4
+					PADDQ XMM1, XMM14
+					PSLLDQ XMM1, 4
+					PADDQ XMM1, XMM14
+					; XMM0 = [R|0|0|0 	|G|O|O|O 	|B|O|O|O 	|O|O|O|O] 
+					; XMM5 = [sumaRGB	|sumaRGB 	|sumaRGB  	|sumaRGB] 
+					; XMM1 = [alfa    	|alfa		|alfa		|alfa   ] 
+					CVTDQ2PS XMM0, XMM0
+					CVTDQ2PS XMM1, XMM1
+					CVTDQ2PS XMM5, XMM5
+					MULPS XMM1, XMM5 								
+					; XMM1 = [alfa*sumaRGB	 |alfa*sumaRGB	 |alfa*sumaRGB	 |alfa*sumaRGB	] 
+					MULPS XMM0, XMM1
+					; XMM0 = [alfa*sumaRGB*R |alfa*sumaRGB*G |alfa*sumaRGB*B |0	] 
+
 					;ALFA * SUMA * SRC / MAX
 					MOV R12, 4876875
 					XORPD XMM14, XMM14
@@ -154,13 +127,19 @@ ldr_asm:
 					PADDQ XMM5, XMM14 
 					CVTDQ2PS XMM5, XMM5 
 					DIVPS XMM0, XMM5
-					
-					MOVDQU XMM1, [RDI]
-					PSHUFB XMM1, [COOO]
-					ADDPS XMM0, XMM1 ;VAR + SRC
+					; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |0	] 
+
+					; VAR + SRC
+					; XMM2 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
+					CVTPS2DQ XMM0, XMM0
+					PADDW XMM0, XMM2
+					MOVDQU XMM5, XMM0 
+					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
+
 					XORPD XMM2, XMM2
-					PCMPGTD XMM2, XMM0 ;VEO QUIENES SON MAS GRANDES QUE 0
-					PANDN XMM0, XMM2 ;HAGO AND PARA PONER EN 0 A LOS MENORES A 0
+					PCMPGTD XMM0, XMM2 	;VEO QUIENES SON MAS GRANDES QUE 0
+					PAND XMM0, XMM5 	;HAGO AND PARA PONER EN 0 A LOS MENORES A 0
+					MOVDQU XMM2, XMM0 
 					
 					MOV R12, 255
 					XORPD XMM14, XMM14
@@ -174,27 +153,11 @@ ldr_asm:
 					PSLLDQ XMM5, 4
 					PADDQ XMM5, XMM14 
 					
-					;XMM0 = [MAX(p_s->r + ((p_s->r * sumargb) / max)), , , ]
-					;XMM0 = [ 300 , , , ]
+					;XMM0 = [MAX(p_s->r + ((p_s->r * sumargb) / max),0), , , ]
 					;XMM5 = [255,255,255,255]
-					PCMPGTW XMM5, XMM0
+					PCMPGTW XMM0, XMM5			; EN LOS QUE SON MAYORES A 255 PONGO 1s, EN LOS OTROS, 0s
 					;XMM5 = [255,0,0,255]
-					PAND XMM0, XMM5 
-					PANDN XMM5, XMM5	
-					MOV R12, 255
-					XORPD XMM14, XMM14
-					MOVQ XMM14, R12
-					XORPD XMM6, XMM6
-					PADDQ XMM6, XMM14 
-					PSLLDQ XMM6, 4 
-					PADDQ XMM6, XMM14
-					PSLLDQ XMM6, 4
-					PADDQ XMM6, XMM14
-					PSLLDQ XMM6, 4
-					PADDQ XMM6, XMM14 
-					;XMM6 = [255] [255] [255] [255]
-					pand XMM5, XMM6
-					POR XMM0, XMM5
+					POR XMM0, XMM2
 					PSHUFB XMM0, [RGB]
 					;sumargb *= alfa;
 					;p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
@@ -219,8 +182,6 @@ ldr_asm:
 					JL .for2
 					
 				.endfor2:
-
-					
 					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
 					;COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
 					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
@@ -247,24 +208,21 @@ ldr_asm:
 					
 
 					INC R10
-					CMP R10, 3
-					JB .for1
+					;CMP R10, 3
+					;JB .for1
 
 					LEA RBX, [RBX + R8]
 					LEA R15, [RBX]
 
-				;AUMENTAR Y SEGUIR
-
-				
 				JMP .for1
 		
 		.endfor1:
-	POP R15
-	POP R14
- 	POP R13
- 	POP R12
- 	POP RBP
-	RET
+			POP R15
+			POP R14
+			POP R13
+			POP R12
+			POP RBP
+			RET
  
 
 sumaRGB:
