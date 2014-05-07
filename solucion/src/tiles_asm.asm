@@ -122,7 +122,7 @@ tiles_asm:
 				.mePaseTile:
 				MOV R11, R10
 				ADD R11, 4
-				CMP R11, [RBP+16]
+				CMP R11D, [RBP+16]
 				JBE .sigo
 				INC R10
 				INC R15

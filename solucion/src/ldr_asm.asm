@@ -75,12 +75,38 @@ ldr_asm:
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
-		JGE .endfor1 
+		JAE .endfor1 
 		;CODIGO
 		;for (int j = 0; j < cols; j++) {
 			XOR R11, R11	;R11: j
 			.for2:
+				CMP R11, RDX
+				JE .endfor2
+				CMP R10, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
+				JBE .copioIgual
+				; SI NO:.
+				MOV R12, RCX 
+				SUB R12, R10 	;VEO SI ESTOY EN LAS ULTIMAS 2 FILAS
+				CMP R12, 2
+				JBE .copioIgual
+				; SI NO:
+				CMP R11, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 COLUMNAS
+				JBE .copioIgual
+				; SI NO:
+				MOV R12, RDX 	;VEO SI ESTOY EN LAS ULTIMAS 2 COLUMNAS
+				SUB R12, R11
+				CMP R12, 2
+				JA .else
 					
+				.copioIgual:
+					MOVDQU XMM0, [RDI]
+					MOVDQU [RSI], XMM0
+					LEA RDI, [RDI + 3]
+					LEA RSI, [RSI + 3]
+					ADD R11, 1
+					JMP .for2
+						
+				.else:
 					CALL sumaRGB
 					;XMM0 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
 					MOVDQU XMM5, XMM0		; XMM5 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
