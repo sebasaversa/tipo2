@@ -27,10 +27,10 @@ tiles_asm:
 ;	int filas,				RCX
 ;	int src_row_size,		R8
 ;	int dst_row_size,		R9
-;	int tamx,				[RBP + 16]
-;	int tamy,				[RBP + 24]
-;	int offsetx,			[RBP + 32]
-;	int offsety){			[RBP + 40]
+;	int tamx,				[RBP + 48]
+;	int tamy,				[RBP + 56]
+;	int offsetx,			[RBP + 64]
+;	int offsety){			[RBP + 72]
 
 ;	unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 ;	unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
@@ -44,14 +44,14 @@ tiles_asm:
 	
 	PUSH RBP					
 	MOV RBP, RSP
-	;PUSH R12
-	;PUSH R13
-	;PUSH R14
-	;PUSH R15
+	PUSH R12
+	PUSH R13
+	PUSH R14
+	PUSH R15
 	
 	;///////////// PARA POSICIONARME EN OFFSET X //////////////////
 	XOR R10, R10
-	MOV R10D, [RBP+32] ; coloco offsetX
+	MOV R10D, [RBP+64] ; coloco offsetX
 	XOR R11, R11
 	.muevoX:
 	CMP R11, R10
@@ -64,7 +64,7 @@ tiles_asm:
 	;///////////// PARA POSICIONARME EN OFFSET Y //////////////////
 	.bajoY:
 	XOR R10, R10
-	MOV R10D, [RBP+40] ;coloco offsetY
+	MOV R10D, [RBP+72] ;coloco offsetY
 	XOR R11, R11
 	.bajoY2:
 	CMP R11, R10
@@ -112,84 +112,85 @@ tiles_asm:
 				MOVDQU [RSI], XMM0
 				
 	
-				CMP R10D, [RBP+16]
-				JB .mePaseTile
+				CMP R10D, [RBP+48]
+				JB .noMePaseTile
 				XOR R10, R10
 				LEA RDI, [R13]
 				JMP .for2
 				
 				;R10 CUENTA EL PIXEL DEL RECUADRO
-				.mePaseTile:
-				MOV R11, R10
-				ADD R11, 4
-				CMP R11D, [RBP+16]
-				JBE .sigo
-				INC R10
-				INC R15
-				LEA RDI, [RDI + 3]
-				LEA RSI, [RSI + 3]
-				JMP .for2
+				.noMePaseTile:
+					MOV R11, R10
+					ADD R11, 4
+					CMP R11D, [RBP+48]
+					JB .sigo
+					INC R10
+					INC R15
+					LEA RDI, [RDI + 3]
+					LEA RSI, [RSI + 3]
+					JMP .for2
 				
 				.sigo:
-				MOV R11, R15
-				ADD R11, 4
-				CMP R11, RDX
-				JBE .sigo2
-				INC R10
-				INC R15
-				LEA RDI, [RDI + 3]
-				LEA RSI, [RSI + 3]
-				JMP .for2
+					MOV R11, R15
+					ADD R11, 4
+					CMP R11, RDX ;VEO SI NO ME PASO DE LA FILA DE DST
+					JB .sigo2
+					INC R10
+					INC R15
+					LEA RDI, [RDI + 3]
+					LEA RSI, [RSI + 3]
+					JMP .for2
 				
 				.sigo2:
-				ADD R10, 4
-				ADD R15, 4
-				LEA RDI, [RDI + 12]
-				LEA RSI, [RSI + 12]
-				JMP .for2
+					ADD R10, 4
+					ADD R15, 4
+					LEA RDI, [RDI + 12]
+					LEA RSI, [RSI + 12]
+					JMP .for2
 				
 				.endfor2:
 				
-				INC R14
-				XOR RAX, RAX
-				XOR R15, R15
-				MOV EAX, [RBP + 24] ;TAM Y
-				MOV R15, R14 ; FILAS QUE RECORRI
+					INC R14
+					XOR RAX, RAX
+					XOR R15, R15
+					MOV AX, [RBP + 56] ;TAM Y
+					MOV R15, R14 ; FILAS QUE RECORRI
 				
 				.cicloDiv:
-				CMP R15, RAX
-				JB .muevoRecuadro
-				JE .inicioTiles
-				SUB R15, RAX
-				CMP R15, RAX
-				JG .cicloDiv
-				JB .muevoRecuadro
-				.inicioTiles:
-				LEA RDI, [R12]
-				LEA R13, [RDI]
-				JMP .muevoDST
-				
+					CMP R15, RAX
+					JB .muevoRecuadro
+					JE .inicioTiles
+					SUB R15, RAX
+					CMP R15, RAX
+					JA .cicloDiv
+					JB .muevoRecuadro
+					.inicioTiles:
+						LEA RDI, [R12]
+						LEA R13, [RDI]
+						JMP .muevoDST
+					
 				.muevoRecuadro:
-				LEA RDI, [R13 + R8]
-				LEA R13, [RDI]
+					LEA RDI, [R13 + R8]
+					LEA R13, [RDI]
 				
 				.muevoDST:
-				MOV R15, RDX
-				MOV RAX, RDX
-				ADD RAX, RAX
-				ADD R15, RAX
-				SUB R15, R9
-				LEA RSI, [RSI + R15]
-				
+					MOV R15, RDX
+					MOV RAX, RDX
+					ADD RAX, RAX
+					ADD R15, RAX
+					MOV RAX, R9
+					SUB RAX, R15
+					LEA RSI, [RSI + RAX]
+					
 				
 				
 				JMP .for1
 		
 		.endfor1:
     
-	;POP R15
-	;POP R14
-	;POP R13
-	;POP R12
+	POP R15
+	POP R14
+	POP R13
+	POP R12
 	POP RBP
 	RET
