@@ -260,54 +260,80 @@ sumaRGB:
 	PUSH R14
 	PUSH R15
 
-		;RDI : puntero al pixel que estoy mirando
 		;R15 ; puntero al pixel que estoy mirando - (2,2)
-		MOVDQU XMM1, [R15]
+		MOVDQU XMM0, [R15]
 		;XMM1: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R1$|G14|B14|R15|G15|B15|0]
-		
-		LEA R15, [R15 + R8]
-		MOVDQU XMM2, [R15]
+		LEA R15, [R15 + R8]	; BAJO UNA FILA
+		MOVDQU XMM1, [R15]
 		;XMM2: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
-				
+		CALL sumaFilas
+		; XMM0: fila1 + fila2
+		MOVDQU XMM3, XMM0
+		; XMM3: fila1 + fila2
+
 		LEA R15, [R15 + R8]
-		MOVDQU XMM3, [R15]
-		;XMM3: [R31|G31|B31|R32|G32|B32|R33|G33|B33|R34|G34|B34|R35|G35|B35|0]
-				
+		MOVDQU XMM0, [R15]
+		;XMM1: [R31|G31|B31|R32|G32|B32|R33|G33|B33|R34|G34|B34|R35|G35|B35|0]
 		LEA R15, [R15 + R8]
-		MOVDQU XMM4, [R15]
-		;XMM4: [R41|G41|B41|R42|G42|B42|R43|G43|B43|R44|G44|B44|R45|G45|B45|0]
-        
+		MOVDQU XMM1, [R15]
+		;XMM2: [R41|G41|B41|R42|G42|B42|R43|G43|B43|R44|G44|B44|R45|G45|B45|0]
+		CALL sumaFilas
+		; XMM0: fila1 + fila2
+		MOVDQU XMM4, XMM0
+		; XMM4: fila3 + fila4
+
 		LEA R15, [R15 + R8]      
-		MOVDQU XMM5, [R15]       
-		;XMM5: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
+		MOVDQU XMM0, [R15]       
+		;XMM1: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
+		XORPD XMM1, XMM1
+		CALL sumaFilas
+		; XMM0: fila5 + fila6(ceros)
+		MOVDQU XMM5, XMM0
+		; XMM5: fila5 + fila6(ceros)
 		
 		
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 1 Y 2 			///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
+		PADDW XMM3, XMM4
+		PADDW XMM3, XMM5
+
+		; XMM5: [sumargb(deLos25Pixeles) |basura |basura |basura |basura |basura |basura |basura]
+		MOVDQU XMM0, XMM5
+		; XMM0: [sumargb(deLos25Pixeles) |basura |basura |basura |basura |basura |basura |basura]
+		
+	POP R15
+	POP R14
+	POP R13
+	POP R12
+	POP RBP					
+
+
+		
+sumaFilas:
+	
+	PUSH RBP					
+	MOV RBP, RSP
 		; XMM1: primer fila con 5 pixeles
 		; XMM2: segunda fila con 5 pixeles
 		;Uso XMM7 para las sumas parciales
 		; Agarro la fila 1
-		MOVDQU XMM7, XMM1
+		MOVDQU XMM7, XMM0
 		;XMM7: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R14 |G14 |B14 |R15 |G15 |B15|0]
 		XORPD XMM15, XMM15
 		PUNPCKLBW XMM7, XMM15
-		PUNPCKHBW XMM1, XMM15
+		PUNPCKHBW XMM0, XMM15
 		;XMM7: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
 		PADDW XMM7, XMM1
 		;XMM7: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 2
-		MOVDQU XMM12, XMM2
+		MOVDQU XMM12, XMM1
 		;XMM12: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
 		XORPD XMM15, XMM15
 		PUNPCKLBW XMM12, XMM15
-		PUNPCKHBW XMM2, XMM15
+		PUNPCKHBW XMM1, XMM15
 		;XMM12:  [R21|0	|G21|0	|B21|0	|R22|0	|G22|0	|B22|0	|R23|0	|G23|0]
 		;XMM2:  [B23|0	|R24|0	|G24|0	|B24|0	|R25|0	|G25|0	|B25|0	|0  |0]
-		PADDW XMM12, XMM2
+		PADDW XMM12, XMM1
 		;XMM12 : [R21+B23 |G21+R24 |B21+G24 |R22+B24 |G22+R25 |B22+G25 |R23+B25 |G23+0]
 		;XMM7:  [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		PHADDW XMM7, XMM12
@@ -337,142 +363,8 @@ sumaRGB:
 		
 		; XMM7: [sumargb(deLasFilas1Y2) |basura |basura |basura |basura |basura |basura |basura]
 
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 1 Y 2 			///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
-		
-		
-
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 3 Y 4 			///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
-		;Uso XMM8 para las sumas parciales
-		;Agarro la fila 3
-		MOVDQU XMM8, XMM3
-		;XMM7: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R14 |G14 |B14 |R15 |G15 |B15|0]
-		XORPD XMM15, XMM15
-		PUNPCKLBW XMM8, XMM15
-		PUNPCKHBW XMM1, XMM15
-		;XMM8: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
-		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADDW XMM8, XMM1
-		;XMM8: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
-		
-		; Agarro la fila 4
-		MOVDQU XMM12, XMM4
-		;XMM12: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
-		XORPD XMM15, XMM15
-		PUNPCKLBW XMM12, XMM15
-		PUNPCKHBW XMM4, XMM15
-		;XMM12:  [R21|0	|G21|0	|B21|0	|R22|0	|G22|0	|B22|0	|R23|0	|G23|0]
-		;XMM4:  [B23|0	|R24|0	|G24|0	|B24|0	|R25|0	|G25|0	|B25|0	|0  |0]
-		PADDW XMM12, XMM4
-		;XMM12 : [R21+B23 |G21+R24 |B21+G24 |R22+B24 |G22+R25 |B22+G25 |R23+B25 |G23+0]
-		;XMM8:  [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
-		PHADDW XMM8, XMM12
-		;XMM8:  [R11+B13 +G11+R14 	|B11+G14+R12+B14 	|G12+R15+B12+G15 |R13+B15 +G13+0
-		;		|R21+B23 +G21+R24 	|B21+G24+R22+B24 	|G22+R25+B22+G25 |R23+B25 +G23+0]
-		
-		PHADDW XMM8, XMM8
-		;XMM8:  [R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	|G22+R25+B22+G25 +R23+B25 +G23+0	XX
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	|G22+R25+B22+G25 +R23+B25 +G23+0		
-		
-		PHADDW XMM8, XMM8
-		;XMM8:	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	XX
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	
-		
-		PHADDW XMM8, XMM8
-		;XMM8: 	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		+R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	XX
-		;		|basura |basura |basura |basura |basura |basura |basura]
-		
-		; XMM8: [sumargb(deLasFilas3Y4) |basura |basura |basura |basura |basura |basura |basura]
-
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 3 Y 4 			///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
-		
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 5 Y 6(ceros)		///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
-		;Uso XMM9 para las sumas parciales
-		;Agarro la fila 5
-		MOVDQU XMM9, XMM5
-		;XMM7: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R14 |G14 |B14 |R15 |G15 |B15|0]
-		XORPD XMM15, XMM15
-		PUNPCKLBW XMM9, XMM15
-		PUNPCKHBW XMM1, XMM15
-		;XMM9: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
-		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADDW XMM9, XMM1
-		;XMM9: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
-		
-		; Agarro la fila 6 (creo una con todos ceros)
-		XORPD XMM6, XMM6
-		MOVDQU XMM12, XMM6
-		;XMM12: [0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|]
-		XORPD XMM15, XMM15
-		PUNPCKLBW XMM12, XMM15
-		PUNPCKHBW XMM6, XMM15
-		;XMM12: [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
-		;XMM6:  [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
-		PADDW XMM12, XMM6
-		;XMM12 : [0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0	|0|0]
-		;XMM9:   [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
-		PHADDW XMM9, XMM12
-		;XMM9:  [R11+B13 +G11+R14 	|B11+G14+R12+B14 	|G12+R15+B12+G15 |R13+B15 +G13+0
-		;		|0+0				|0+0				|0+0			 |0+0	]
-		
-		PHADDW XMM9, XMM9
-		;XMM9:  [R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		|0 					+0 					|0				 +0 	  +0		XX
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0
-		;		|0 					+0 					|0				 +0 	  +0		
-		
-		PHADDW XMM9, XMM9
-		;XMM9:	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		|0 					+0 					|0				 +0 	  +0		XX
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|0 					+0 					|0				 +0 	  +0	
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|0 					+0 					|0				 +0 	  +0	
-		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
-		;		|0 					+0 					|0				 +0 	  +0	
-		
-		PHADDW XMM9, XMM9
-		;XMM9: 	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
-		;		+R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	XX
-		;		|basura |basura |basura |basura |basura |basura |basura]
-		
-		; XMM9: [sumargb(deLaFila5) |basura |basura |basura |basura |basura |basura |basura]
-
-		;//////////////////////////////////////////////////////////////////////////////
-		;///////////////////		SUMO LAS FILAS 5 Y 6(ceros)		///////////////////
-		;//////////////////////////////////////////////////////////////////////////////
-		
-		
-		; XMM7: [sumargb(deLasFilas1Y2) |basura |basura |basura |basura |basura |basura |basura]
-		; XMM8: [sumargb(deLasFilas3Y4) |basura |basura |basura |basura |basura |basura |basura]
-		; XMM9: [sumargb(deLaFila5) 	|basura |basura |basura |basura |basura |basura |basura]
-		
-		PADDW XMM7, XMM8
-		PADDW XMM7, XMM9
-
-		; XMM7: [sumargb(deLos25Pixeles) |basura |basura |basura |basura |basura |basura |basura]
 		MOVDQU XMM0, XMM7
 		
-	POP R15
-	POP R14
- 	POP R13
- 	POP R12
  	POP RBP
 	RET
  

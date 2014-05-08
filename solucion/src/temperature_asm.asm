@@ -82,7 +82,7 @@ temperature_asm:
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
-		JGE .endfor1 
+		JAE .endfor1 
 		;CODIGO
 		;for (int j = 0; j < cols; j++) {
 			XOR R11, R11	;R11: j
@@ -90,7 +90,7 @@ temperature_asm:
 				;CONDICION
 				;CMP EDX, R11	; EDX: cols
 				CMP R11, RDX	; EDX: cols
-				JGE .endfor2 
+				JAE .endfor2 
 				;CODIGO
 				;rgb_t *p_d = (rgb_t*)&dst_matrix[i][j*3];
 				;rgb_t *p_s = (rgb_t2*)&src_matrix[i][j*3];
@@ -104,21 +104,21 @@ temperature_asm:
 				;AUMENTAR Y SEGUIR
 				ADD R11, 2				; como agarro 2 pixeles, me corro 2 columnas
 				CMP R11, RDX
-				JE .endfor2
+				JAE .endfor2
 				;CMP R11, RDX
 				;JGE .endfor2
 				;VEMOS SI TOCAMOS PADDING
 				MOV R12, R11
 				ADD R12, 2
 				CMP R12, RDX
-				JLE .for2
+				JBE .for2
 				LEA RSI, [RSI-3]
 				LEA RDI, [RDI-3]
 				SUB R11, 1
 				jmp .for2
 				.endfor2:
-				LEA RSI, [RBX + R8]
-				LEA RDI, [RAX + R9]
+					LEA RSI, [RBX + R8]
+					LEA RDI, [RAX + R9]
 
 				;AUMENTAR Y SEGUIR
 				LEA RAX, [RAX + R8]
