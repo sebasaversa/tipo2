@@ -1,0 +1,76 @@
+\section{Filtro de tiles}
+\subsection{Enunciado}
+
+ Programar el filtro \textit{tiles} en lenguaje C y luego en ASM haciendo uso de las instrucciones vectoriales (\textbf{SSE}).
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 1 - análisis el código generado}
+
+Utilizar la herramienta \verb|objdump| para verificar como el compilador de C deja ensamblado el código C. Como es el código generado, ¿cómo se manipulan las variables locales?¿le parece que ese código generado podría optimizarse?
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 2 - optimizaciones del compilador}
+
+Compile el código de C con optimizaciones del compilador, por ejemplo, pasando el flag \verb|-O1|\footnote{agregando este flag a \texttt{CCFLAGS64} en el makefile}. 
+¿Qué optimizaciones realizó el compilador?
+¿Qué otros flags de optimización brinda el compilador?
+¿Para qué sirven?
+
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 3 - secuencial vs. vectorial}
+
+	Realice una medición de las diferencias de performance entre las versiones
+	de C y ASM (el primero con -O1, -O2 y -O3).\\
+	¿Como realizó la medición?¿Cómo sabe que su medición es una buena medida?¿Cómo afecta a la medición la existencia de \emph{outliers}\footnote{en español, valor atípico: \url{http://es.wikipedia.org/wiki/Valor_atípico}}?¿De qué manera puede minimizar su impacto?¿Qué resultados obtiene si mientras corre los tests ejecuta otras aplicaciones que utilicen al máximo la CPU? 
+	Realizar un análisis \textbf{riguroso} de los resultados y acompañar con un gráfico que presente estas diferencias.
+
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 4 - cpu vs. bus de memoria}
+
+	Se desea conocer cual es el mayor limitante a la performance de este filtro en su versión ASM.
+
+	¿Cuál es el factor que limita la performance en este caso? En caso de que el limitante
+	fuera la intensidad de cómputo, entonces podrían agregarse instrucciones que realicen
+	accesos a memoria y la performance casi no debería sufrir. La inversa puede aplicarse
+	si el limitante es la cantidad de accesos a memoria.
+	
+	Realizar un experimento, agregando múltiples instrucciones de un mismo tipo y realizar un análisis
+	del resultado. Acompañar con un gráfico.
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 5 (\textit{opcional}) - secuencial vs. vectorial (parte II)}
+
+	Si vemos a los pixeles como una tira muy larga de bytes, este filtro en
+	realidad no requiere ningún procesamiento de datos en paralelo. Esto podría
+	significar que la velocidad del filtro de C puede aumentarse hasta casi
+	alcanzar la del de ASM. ¿ocurre esto?
+	
+	Modificar el filtro para que en vez de acceder a los bytes de a uno a la vez
+	se accedan como tiras de 64 bits y analizar la performance.
+	
+\newpage
+\subsection{Implementaci\'on en C}
+
+La implementaci\'on en C del ejercicio tiles es tomar un rect\'angulo de la imagen original y repartirla por la imagen destino. Se resuelve con dos ciclos for anidados usando la forma dada en el enuciado.
+
+\subsection{Implementaci\'on en assembler}
+Para la resoluci\'on en assembler creamos los dos ciclos anidados con los registros de prop\'osito general. AL comienzo del segundo siclo se hace la copia.
+\begin{codesnippet}
+\begin{verbatim}
+	MOVDQU XMM0, [RDI]
+	MOVDQU [RSI], XMM0
+\end{verbatim}
+\end{codesnippet}
+Luego, para ciclar y recorrer toda la matriz se modifican los valores de RSI y RDI cuando es necesario.
+\subsection{Resultado de los experimentos}
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 1 - análisis el código generado}
+El compilador genera más variables locales que las usadas en nuestro c\'odigo assembler. En ese sentido, estamos realizando una mejora al c\'odigo de memoria y velocidad
+
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 2 - optimizaciones del compilador}
+El compilador ofrece los flags -O1 a -03 para distintos niveles de optimizaci\'on, asi como los flags para indicar si es assembler de intel, amd, etc. Esto ultimo hace m\'as espec\'ifico el codigo assembler y correr\'ia mejor en una maquina con el microprocesador seleccionado,aunque no correr\'ia en uno de otra marca o de una familia de microprocesadores anterior a la elegida.
