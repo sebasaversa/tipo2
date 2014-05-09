@@ -1,0 +1,127 @@
+\section{Filtro Popart}
+\subsection{Enunciado}
+
+\subsection*{Filtro \textit{Popart}}
+
+  Programar el filtro \textit{Popart} en lenguaje C y en en ASM haciendo uso de 
+  las instrucciones vectoriales (\textbf{SSE}).
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 1 - saltos condicionales}
+
+	Se desea conocer que tanto impactan los saltos condicionales
+	en el código del ejercicio anterior con \verb|-O1|.\\
+	Para poder medir esto, una posibilidad es quitar las comparaciones
+	al procesar cada pixel. Por más que la imagen resultante no sea correcta,
+	será posible tomar una medida del impacto de los saltos condicionales.
+	Analizar como varía la performance. 
+	
+	Si se le ocurren, mencionar otras posibles formas de medir el impacto de los saltos condicionales.
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 2 - cpu vs. bus de memoria}
+
+	¿Cuál es el factor que limita la performance en este caso? 
+	
+	Realizar un experimento, agregando múltiples instrucciones de un mismo tipo
+	y realizar un análisis 	del resultado. Acompañar con un gráfico.
+
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 3 - prefetch}
+
+  La técnica de \textit{prefetch} es otra forma de optimización que puede
+  realizarse. Su sustento teórico es el siguiente:
+  
+  Suponga un algoritmo que en cada iteración tarda n ciclos en obtener un dato y una cantidad
+  similar en procesarlo. Si el algoritmo lee el dato $i$ y luego lo procesa,
+  desperdiciará siempre n ciclos esperando entre que el dato llega y que se comienza
+  a procesar efectivamente. Un algoritmo más inteligente podría pedir el 
+  dato $i+1$ al comienzo del ciclo de proceso del dato $i$ (siempre suponiendo
+  que el dato $i$ pidió en la iteración $i-1$. De esta manera, a la vez que el
+  procesador computa todas las instrucciones de la iteración $i$, se estáran trayendo
+  los datos de la siguiente iteración, y cuando esta última comience, los datos ya
+  habrán llegado.
+
+  \vspace*{0.2cm}
+  Estudiar esta técnica y proponer una aplicación al código del filtro en la versión ASM.
+  Programarla y analizar el resultado. ¿Vale la pena hacer prefetching?
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 3 - secuencial vs. vectorial}
+
+  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Realizar gráficos que representen estas diferencias.
+
+
+
+\subsection{Implementaci\'on en C}
+Para la implementaci\'on en C usamos un vector con los posibles reemplazos para cada pixel, y una funci\'on que devuelve cual va a ser ese reemplazo mediante comparaciones.
+\begin{codesnippet}
+\begin{verbatim}
+
+rgb_t colores[] = { {255,   0,   0},
+                    {127,   0, 127},
+                    {255,   0, 255},
+                    {  0,   0, 255},
+                    {  0, 255, 255} };
+
+			
+int pop_art(unsigned int r, unsigned int g, unsigned int b)
+{
+	unsigned int suma = r + g + b;
+	int res;
+	
+	if 		 (suma < 153)	{res = 0;}
+	else if (suma < 306)	{res = 1;}
+	else if (suma < 459)	{res = 2;}
+	else if (suma < 612)	{res = 3;}
+	else 					{res = 4;}
+	
+	return res;
+}
+\end{verbatim}
+\end{codesnippet}
+
+\subsection{Implementaci\'on en assembler}
+Armamos máscaras para las comparaci\'ones con suma(i,j).
+\begin{codesnippet}
+\begin{verbatim}
+seisDoce:          DD 0x264, 0x264, 0x264, 0x264    ; 612, 612, 612, 612			
+cuatroCincoNueve:  DD 0x1CB, 0x1CB, 0x1CB, 0x1CB    ; 459, 459, 459, 459	
+tresOSeis:         DD 0x132, 0x132, 0x132, 0x132    ; 306, 306, 306, 306	
+unoCincoTres:      DD 0x99, 0x99, 0x99, 0x99        ; 153, 153, 153, 153
+\end{verbatim}
+\end{codesnippet}
+
+Tambi\'en para reemplazar los pixeles (solo cito el primer caso).
+\begin{codesnippet}
+\begin{verbatim}
+colores0:          DB  0xFF, 0x0,  0x0, 0x0,        ; 255,   0,   0,   0
+                   DB  0xFF, 0x0,  0x0, 0x0,        ; 255,   0,   0,   0
+                   DB  0xFF, 0x0,  0x0, 0x0,        ; 255,   0,   0,   0
+                   DB  0xFF, 0x0,  0x0, 0x0         ; 255,   0,   0,   0
+
+\end{verbatim}
+\end{codesnippet}
+El resto de las m\'ascaras, usadas con \verb|PSHUFB|.\\ son:
+
+\begin{itemize}
+	\item pixel0BGR : Para tener un pixel (R,G y B) en cada \textit{double word}. El cuarto Byte se rellena con ceros
+			
+	\item soloPrimero : Lo usamos para trabajar sobre el primer Byte de cada \textit{double word}
+		
+	\item pixelFinal : Sirve para sacar el ceros ubicado en el cuarto Byte de cada \textit{double word}. El ultimo DB se rellena con ceros
+\end{itemize}
+\'Estas m\'ascaras son usadas en \textit{pop_art} para discriminar los Bytes de R, G y B y guardar la suma de cada uno en un \textit{double word}
+
+\subsection{Resultado de los experimentos}
+%\begin{figure}
+%  \begin{center}
+%	\includegraphics[scale=0.66]{imagenes/logouba.jpg}
+%	\caption{Logo}
+%	\label{Logo}
+%  \end{center}
+%\end{figure}
+
+
