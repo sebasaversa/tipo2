@@ -3,46 +3,87 @@ global temperature_asm
 section .data
 section .rodata
 
-; VEMOS CADA PIXEL COMO SI FUERAN 4 WORDS Y PROCESAMOS DE A 2 PIXELES
+; PROCESAMOS DE A 5 PIXELES
+
 ALIGN 16 
-pixel0BGR : DB 0x00, 0x80, 0x01,  0x80,
-			DB 0x02, 0x80, 0x80,  0x80,
-			DB 0x03, 0x80, 0x04,  0x80,
-			DB 0x05, 0x80, 0x80,  0x80
+pixel0BGR :				DB 0x00, 0x80, 0x01,  0x80,
+						DB 0x02, 0x80, 0x80,  0x80,
+						DB 0x03, 0x80, 0x04,  0x80,
+						DB 0x05, 0x80, 0x80,  0x80
+ALIGN 16
+soloPrimero : 			DB  0x00, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x08, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80
+ALIGN 16		
+invertir: 				DB  0x09, 0x0A, 0x0B, 0x0C,
+						DB  0x0D, 0x0E, 0x03, 0x04,
+						DB  0x05, 0x06, 0x07, 0x08,
+						DB  0x00, 0x01, 0x02, 0x80
+ALIGN 16
+moverPixeles: 			DB  0x06, 0x07, 0x08, 0x09,
+						DB  0x0A, 0x0B, 0x0C, 0x0D,
+						DB  0x0E, 0x0F, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80
+ALIGN 16
+moverPixeles1: 			DB  0x06, 0x07, 0x08, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80
+ALIGN 16			
+moverPixeles2:			DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x80, 0x00, 0x01, 0x02,
+						DB  0x03, 0x04, 0x05, 0x80						
+ALIGN 16			
+moverPixeles3:			DB  0x80, 0x80, 0x80, 0x00,
+						DB  0x01, 0x02, 0x03, 0x04,
+						DB  0x05, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80						
+ALIGN 16
+shuffleCaverna2:		DB  0x00, 0x01, 0x02, 0x03,
+						DB  0x08, 0x09, 0x0A, 0x0B,
+						DB  0x80, 0x80, 0x80, 0x80,
+						DB  0x80, 0x80, 0x80, 0x80
+ALIGN 16		
+unPixel :				DB 0x00, 0x01, 0x02, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80
+ALIGN 16		
+pixelFinal :			DB 0x00, 0x01, 0x02, 0x04,
+						DB 0x05, 0x06, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80
+ALIGN 16
+unByte:					DB 0X00, 0x80, 0x80, 0x80
+						DB 0x80, 0x80, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80,
+						DB 0x80, 0x80, 0x80, 0x80
+ALIGN 16 
+dosDosCuatro: 			DQ 0xE1, 0xE1							; 225, 225, 225, 225			
+ALIGN 16 
+unoSeisCero: 			DQ 0xA1, 0xA1							; 161, 161, 161, 161 	
+ALIGN 16 
+nueveSeis: 				DQ 0x61, 0x61							; 97, 97, 97, 97, 	
+ALIGN 16 
+tresDos: 				DQ 0x21, 0x21							; 33, 33, 33, 33, 
 
-soloPrimero : 	DB  0x00, 0x80, 0x80, 0x80,
-				DB  0x80, 0x80, 0x80, 0x80,
-				DB  0x08, 0x80, 0x80, 0x80,
-				DB  0x80, 0x80, 0x80, 0x80
-
-;shuffleCaverna:	DW 0x00, 0x02, 0x04, 0x80
-;				DW 0x80, 0x80, 0x80, 0x80,
-
-shuffleCaverna2:DB  0x00, 0x01, 0x02, 0x03,
-				DB  0x08, 0x09, 0x0A, 0x0B,
-				DB  0x80, 0x80, 0x80, 0x80,
-				DB  0x80, 0x80, 0x80, 0x80
-
-pixelFinal :	DB 0x00, 0x01, 0x02, 0x04
-				DB 0x05, 0x06, 0x08, 0x09,
-				DB 0x80, 0x80, 0x80, 0x80,
-				DB 0x80, 0x80, 0x80, 0x80,
-
-dosDosCuatro: 	DQ 0xE1, 0xE1						; 225, 225, 225, 225			
-unoSeisCero: 	DQ 0xA1, 0xA1						; 161, 161, 161, 161 	
-nueveSeis: 		DQ 0x61, 0x61						; 97, 97, 97, 97, 	
-tresDos: 		DQ 0x21, 0x21						; 33, 33, 33, 33, 
-
-colores0: 			DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0	 			,   0
-					DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0				,   0
-colores1: 			DW  0xFF, 0x0, 0x0, 0x0,				; 255		,   (4T-128)	, 0				,   0	
-					DW  0xFF, 0x0, 0x0, 0x0,				; 255		,   (4T-128)	, 0				,   0
-colores2: 			DW  0x27F, 0xFF, 0x0, 0x0,				; 639 (- 4T),   255			, (4T - 384)	,   0
-					DW  0x27F, 0xFF, 0x0, 0x0,				; 639 (- 4T),   255			, (4T - 384)	,   0
-colores3: 			DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
-					DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
-colores4: 			DW  0x0, 0X0, 0x47F, 0x0,				; 0			,	0			, 1151 (- 4T)	,   0
-					DW  0x0, 0X0, 0x47F, 0x0				; 0			,	0			, 1151 (- 4T)	,   0
+ALIGN 16
+colores0: 				DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0	 			,   0
+						DW  0x80, 0x0,  0x0, 0x0,				; 128( + 4T),   0			, 0				,   0
+ALIGN 16	
+colores1: 				DW  0xFF, 0x0, 0x0, 0x0,				; 255		,   (4T-128)	, 0				,   0	
+						DW  0xFF, 0x0, 0x0, 0x0,				; 255		,   (4T-128)	, 0				,   0
+ALIGN 16	
+colores2: 				DW  0x27F, 0xFF, 0x0, 0x0,				; 639 (- 4T),   255			, (4T - 384)	,   0
+						DW  0x27F, 0xFF, 0x0, 0x0,				; 639 (- 4T),   255			, (4T - 384)	,   0
+ALIGN 16	
+colores3: 				DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
+						DW 	0x0, 0x37F, 0xFF, 0x0,				; 0			,   895 (- 4T)  , 255			,   0
+ALIGN 16	
+colores4: 				DW  0x0, 0X0, 0x47F, 0x0,				; 0			,	0			, 1151 (- 4T)	,   0
+						DW  0x0, 0X0, 0x47F, 0x0				; 0			,	0			, 1151 (- 4T)	,   0
 
 
 section .text
@@ -76,54 +117,78 @@ temperature_asm:
     ;for (int i = 0; i < filas; i++) {
 	MOV RAX, RDI
 	MOV RBX, RSI
-	XOR R10, R10	; R10: i
+	XOR R14, R14	; R10: i
 	.for1:
 
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
-		CMP R10, RCX			; ECX: filas
+		CMP R14, RCX			; ECX: filas
 		JAE .endfor1 
 		;CODIGO
 		;for (int j = 0; j < cols; j++) {
-			XOR R11, R11	;R11: j
+			XOR R15, R15	;R11: j
 			.for2:
 				;CONDICION
 				;CMP EDX, R11	; EDX: cols
-				CMP R11, RDX	; EDX: cols
+				CMP R15, RDX	; EDX: cols
 				JAE .endfor2 
 				;CODIGO
 				;rgb_t *p_d = (rgb_t*)&dst_matrix[i][j*3];
 				;rgb_t *p_s = (rgb_t2*)&src_matrix[i][j*3];
 				;int s = pop_art(p_s->r, p_s->g, p_s->b);
-				CALL temp_aux		; XMM0: 2 pixeles que van en dst*
+				MOVDQU XMM0, [RDI]	
+				CALL tempe		; XMM0: 5 pixeles que van en dst*
 				;*p_d = colores[s];}}}					
 				MOVDQU [RSI], XMM0
-				LEA RSI, [RSI+6]
-				LEA RDI, [RDI+6]
+				LEA RSI, [RSI+15]
+				LEA RDI, [RDI+15]
 
 				;AUMENTAR Y SEGUIR
-				ADD R11, 2				; como agarro 2 pixeles, me corro 2 columnas
-				CMP R11, RDX
-				JAE .endfor2
-				;CMP R11, RDX
-				;JGE .endfor2
-				;VEMOS SI TOCAMOS PADDING
-				MOV R12, R11
-				ADD R12, 2
-				CMP R12, RDX
-				JBE .for2
-				LEA RSI, [RSI-3]
-				LEA RDI, [RDI-3]
-				SUB R11, 1
-				jmp .for2
+				ADD R15, 5				; como agarro 5 pixeles, me corro 5 columnas
+				MOV R12, RDX
+				SUB R12, R15
+				CMP R12, 5
+				JA .for2
+				
+				.finFila:
+					; RESGUARDO RAX Y RDX
+					MOV R13, RAX
+					MOV R11, RDX
+					; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
+					MOV RAX, RDX
+					MOV R10, 3
+					MUL R10
+					MOV R10, RAX
+					; RESTAURO RAX Y RDX
+					MOV RAX, R13
+					MOV RDX, R11
+					LEA RSI, [RBX + R10 - 16]
+					LEA RDI, [RAX + R10 - 16]
+					; PASO LOS ULTIMOS 16 BYTES A XMM0
+					MOVDQU XMM0, [RDI]	
+					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
+					MOVDQU XMM1, [RSI]
+					PSHUFB XMM1, [unByte]
+					MOVQ R12, XMM1
+					; SHIFTEO EL REGISTRO PARA QUE ME QUEDEN LOS 5 PIXELES EN LOS PRIMEROS 15 BYTES DE XMM0
+					PSRLDQ XMM0, 1 
+					CALL tempe
+					; LO VUELVO A SHIFTEAR PARA EL OTRO LADO PARA PONER EL BYTE QUE GUARDE EN R12
+					PSLLDQ XMM0, 1 
+					XORPD XMM1, XMM1
+					MOVQ XMM1, R12
+					; JUNTO LOS DOS REGISTROS
+					POR XMM1, XMM0
+					MOVDQU [RSI], XMM1
 				.endfor2:
-					LEA RSI, [RBX + R8]
-					LEA RDI, [RAX + R9]
+					; MUEVO LOS PUNTEROS A LA PROXIMA FILA
+					LEA RDI, [RAX + R8]
+					LEA RSI, [RBX + R9]
 
 				;AUMENTAR Y SEGUIR
 				LEA RAX, [RAX + R8]
 				LEA RBX, [RBX + R9]
-				INC R10
+				INC R14
 				JMP .for1
 
 		.endfor1:
@@ -135,6 +200,31 @@ temperature_asm:
 	RET
 
 
+tempe:
+
+	PUSH RBP
+	MOV RBP, RSP
+		
+		;XMM0: R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
+		MOVDQU XMM8, XMM0
+		CALL temp_aux
+		MOVDQU XMM9, XMM0
+		PSHUFB XMM8, [moverPixeles]
+		PSHUFB XMM9, [moverPixeles2]
+		MOVDQU XMM0, XMM8
+		CALL temp_aux
+		MOVDQA XMM13, XMM0
+		PSHUFB XMM13, [moverPixeles3]
+		
+		PSHUFB XMM8, [moverPixeles1]
+		MOVDQU XMM0, XMM8
+		CALL temp_aux
+		PSHUFB XMM0, [unPixel]
+		POR XMM0, XMM13
+		POR XMM0, XMM9
+		PSHUFB XMM0, [invertir]
+	POP RBP
+	RET
 temp_aux:
 ;void temperatura(rgb_t* p_d, unsigned int r, unsigned int g, unsigned int b){
 ;	unsigned int prom = (r + g + b) / 3;
@@ -153,7 +243,6 @@ temp_aux:
 	PUSH R12
 	PUSH R13
 
-	MOVDQU XMM0, [RDI]	; R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
 
 	; VER COMO FUNCIONA ESTE SHUFFLE
 
