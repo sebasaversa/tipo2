@@ -106,12 +106,17 @@ tiles_asm:
 			;rgb_t *p_d = (rgb_t*)&dst_matrix[i][j*3];
 			;rgb_t *p_s = (rgb_t*)&src_matrix[(i % tamy) + offsety][((j*3) % (tamx*3)) + (offsetx*3)];
 			;*p_d = *p_s;}}}
-
-
-			MOVDQU XMM0, [RDI]
-			MOVDQU [RSI], XMM0
-
-
+			
+			
+			
+			
+			
+			
+			;MOVDQU XMM0, [RDI]
+			;MOVDQU [RSI], XMM0
+			
+			
+			
 			CMP R10D, [RBP+16]
 			JB .mePaseTile
 			XOR R10, R10
@@ -121,31 +126,51 @@ tiles_asm:
 			;R10 CUENTA EL PIXEL DEL RECUADRO
 			.mePaseTile:
 			MOV R11, R10
-			ADD R11, 4
+			ADD R11, 6
 			CMP R11D, [RBP+16]
 			JBE .sigo
 			INC R10
 			INC R15
-			LEA RDI, [RDI + 3]
-			LEA RSI, [RSI + 3]
+			LEA RDI, [RDI - 13]
+			LEA RSI, [RSI - 13]
+			MOVDQU XMM0, [RDI]
+			MOVDQU [RSI], XMM0
+			LEA RDI, [RDI + 16]
+			LEA RSI, [RSI + 16]
+
 			JMP .for2
 
 			.sigo:
 			MOV R11, R15
-			ADD R11, 4
+			ADD R11, 6
 			CMP R11, RDX
 			JBE .sigo2
 			INC R10
 			INC R15
+			;LEA RDI, [RDI - 13]
+			LEA RSI, [RSI - 13]
+			MOVDQU XMM1, [RSI] ;ME GUARDO LOS ANTERIORES 13 BYTES DE RSI
+			MOVDQU XMM0, [RDI]
+			PSLLDQ XMM1, 3
+			PSRLDQ XMM1, 3
+			PSRLDQ XMM0, 13
+			PSLLDQ XMM0, 13
+			PADDB XMM0, XMM1
+			MOVDQU [RSI], XMM0
+			
 			LEA RDI, [RDI + 3]
-			LEA RSI, [RSI + 3]
+			LEA RSI, [RSI + 16]
 			JMP .for2
 
 			.sigo2:
-			ADD R10, 4
-			ADD R15, 4
-			LEA RDI, [RDI + 12]
-			LEA RSI, [RSI + 12]
+			
+			MOVDQU XMM0, [RDI]
+			MOVDQU [RSI], XMM0
+
+			ADD R10, 5
+			ADD R15, 5
+			LEA RDI, [RDI + 15]
+			LEA RSI, [RSI + 15]
 			JMP .for2
 
 			.endfor2:
