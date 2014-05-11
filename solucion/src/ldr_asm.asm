@@ -153,14 +153,14 @@ ldr_asm:
 					PADDQ XMM5, XMM14 
 					CVTDQ2PS XMM5, XMM5 
 					DIVPS XMM0, XMM5
-					; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |0	] 
+					; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*G)/MAX |(alfa*sumaRGB*B)/MAX |0	] 
 
 					; VAR + SRC
 					; XMM2 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
 					CVTPS2DQ XMM0, XMM0
-					PADDW XMM0, XMM2
+					PADDD XMM0, XMM2
 					MOVDQU XMM5, XMM0 
-					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
+					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*G)/MAX)+SRCg |((alfa*sumaRGB*B)/MAX)+SRCb |0	] 
 
 					XORPD XMM2, XMM2
 					PCMPGTD XMM0, XMM2 	;VEO QUIENES SON MAS GRANDES QUE 0
