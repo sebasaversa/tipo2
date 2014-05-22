@@ -157,7 +157,7 @@ ldr_asm:
 
 					; VAR + SRC
 					; XMM2 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
-					CVTPS2DQ XMM0, XMM0
+					CVTTPS2DQ XMM0, XMM0
 					PADDW XMM0, XMM2
 					MOVDQU XMM5, XMM0 
 					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
