@@ -153,14 +153,14 @@ ldr_asm:
 					PADDQ XMM5, XMM14 
 					CVTDQ2PS XMM5, XMM5 
 					DIVPS XMM0, XMM5
-					; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*G)/MAX |(alfa*sumaRGB*B)/MAX |0	] 
+					; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |0	] 
 
 					; VAR + SRC
 					; XMM2 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
 					CVTPS2DQ XMM0, XMM0
-					PADDD XMM0, XMM2
+					PADDW XMM0, XMM2
 					MOVDQU XMM5, XMM0 
-					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*G)/MAX)+SRCg |((alfa*sumaRGB*B)/MAX)+SRCb |0	] 
+					; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
 
 					XORPD XMM2, XMM2
 					PCMPGTD XMM0, XMM2 	;VEO QUIENES SON MAS GRANDES QUE 0
@@ -237,6 +237,8 @@ ldr_asm:
 					;CMP R10, 3
 					;JB .for1
 
+					CMP DWORD R10, 2
+					JBE .for1 
 					LEA RBX, [RBX + R8]
 					LEA R15, [RBX]
 
@@ -281,6 +283,17 @@ sumaRGB:
 		MOVDQU XMM5, [R15]       
 		;XMM5: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
 		
+		PSLLDQ XMM1, 1
+		PSRLDQ XMM1, 1
+		PSLLDQ XMM2, 1
+		PSRLDQ XMM2, 1
+		PSLLDQ XMM3, 1
+		PSRLDQ XMM3, 1
+		PSLLDQ XMM4, 1
+		PSRLDQ XMM4, 1
+		PSLLDQ XMM5, 1
+		PSRLDQ XMM5, 1
+		;CON ESTO ELIMINO EL PIXEL 16 DE TODOS LOS XMM
 		
 		;//////////////////////////////////////////////////////////////////////////////
 		;///////////////////		SUMO LAS FILAS 1 Y 2 			///////////////////
@@ -352,10 +365,10 @@ sumaRGB:
 		;XMM7: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R14 |G14 |B14 |R15 |G15 |B15|0]
 		XORPD XMM15, XMM15
 		PUNPCKLBW XMM8, XMM15
-		PUNPCKHBW XMM1, XMM15
+		PUNPCKHBW XMM3, XMM15
 		;XMM8: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADDW XMM8, XMM1
+		PADDW XMM8, XMM3
 		;XMM8: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 4
@@ -409,10 +422,10 @@ sumaRGB:
 		;XMM7: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R14 |G14 |B14 |R15 |G15 |B15|0]
 		XORPD XMM15, XMM15
 		PUNPCKLBW XMM9, XMM15
-		PUNPCKHBW XMM1, XMM15
+		PUNPCKHBW XMM5, XMM15
 		;XMM9: [R11|0	|G11|0	|B11|0	|R12|0	|G12|0	|B12|0	|R13|0	|G13|0]
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
-		PADDW XMM9, XMM1
+		PADDW XMM9, XMM5
 		;XMM9: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
 		
 		; Agarro la fila 6 (creo una con todos ceros)
