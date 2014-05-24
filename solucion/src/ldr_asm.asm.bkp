@@ -18,19 +18,6 @@ RGB : 		DB 0x00, 0x04, 0x08,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80,
 			DB 0x80, 0x80, 0x80,  0x80
-
-ALIGN 16
-unByte:		DB 0x00, 0x80, 0x80, 0x80
-			DB 0x80, 0x80, 0x80, 0x80,
-			DB 0x80, 0x80, 0x80, 0x80,
-			DB 0x80, 0x80, 0x80, 0x80
-
-ALIGN 16
-ceros:		DB 0x80, 0x80, 0x80, 0x80
-			DB 0x80, 0x80, 0x80, 0x80,
-			DB 0x80, 0x09, 0x0A, 0x0B,
-			DB 0x0C, 0x0D, 0x0E, 0x80
-		
 section .text
 ;void ldr_c    (
 ;    unsigned char *src,     RDI
@@ -39,7 +26,7 @@ section .text
 ;    int filas,              RCX
 ;    int src_row_size,       R8
 ;    int dst_row_size,       R9
-;	int alfa)				 [RSP + X]
+;	int alfa)				 [RSP + 48]
 ;{
 ;    unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
 ;    unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
@@ -81,7 +68,6 @@ ldr_asm:
 
 	LEA RBX, [RDI]
 	LEA R15, [RDI]
-	LEA R13, [RSI]
 
 	XOR R10, R10	; R10: i
 	.for1:
@@ -96,163 +82,86 @@ ldr_asm:
 			.for2:
 				CMP R11, RDX
 				JE .endfor2
-				
 				CMP R10, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
-				JBE .copioFila
-				; SI NO:
+				JBE .copioIgual
+				; SI NO:.
 				MOV R12, RCX 
 				SUB R12, R10 	;VEO SI ESTOY EN LAS ULTIMAS 2 FILAS
 				CMP R12, 2
-				JBE .copioFila
+				JBE .copioIgual
 				; SI NO:
 				CMP R11, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 COLUMNAS
+				JBE .copioIgual
+				; SI NO:
+				MOV R12, RDX 	;VEO SI ESTOY EN LAS ULTIMAS 2 COLUMNAS
+				SUB R12, R11
+				CMP R12, 2
 				JA .else
-
+					
 				.copioIgual:
 					MOVDQU XMM0, [RDI]
 					MOVDQU [RSI], XMM0
-					LEA RDI, [RDI + 6]
-					LEA RSI, [RSI + 6]
-					ADD R11, 2
+					LEA RDI, [RDI + 3]
+					LEA RSI, [RSI + 3]
+					ADD R11, 1
 					JMP .for2
-		
-				.copioFila:
-					MOVDQU XMM0, [RDI]
-					MOVDQU [RSI], XMM0
-					LEA RDI, [RDI + 15]
-					LEA RSI, [RSI + 15]
-					ADD R11, 5				; como agarro 5 pixeles, me corro 5 columnas
-					MOV R12, RDX
-					SUB R12, R11
-					CMP R12, 5
-					JA .for2
-					
-						; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
-					PUSH R10
-					MOV RAX, RDX
-					MOV R10, 3
-					MUL R10
-					MOV R10, RAX
-
-					LEA RSI, [R13 + R10 - 16]
-					LEA RDI, [RBX + R10 - 16]
-					POP R10
-					MOVDQU XMM0, [RDI]
-					MOVDQU [RSI], XMM0
-					JMP .endfor2	
-
+						
 				.else:
-					;////////////// PROCESO 1er PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM1, XMM0
-					;XMM1 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
-					;////////////// PROCESO 2do PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM2, XMM0
-					;XMM2 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
-					;////////////// PROCESO 3er PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM3, XMM0
-					;////////////// PROCESO 4to PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM4, XMM0
-					;////////////// PROCESO 5to PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM5, XMM0
+					CALL sumaRGB
+					;XMM0 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
+					CALL minMax
+					;XMM0 = [MIN(MAX(p_s->r + ((p_s->r * sumargb) / max),0)), idem grenn, idem blue, 0]
 
-					PSLLDQ XMM2, 3					
-					PSLLDQ XMM3, 6
-					PSLLDQ XMM4, 9
-					PSLLDQ XMM5, 12
-
-					POR XMM1, XMM2
-					POR XMM1, XMM3
-					POR XMM1, XMM4
-					POR XMM1, XMM5
-					MOVDQU [RSI], XMM1
-
-
-					ADD R11, 5				; como agarro 5 pixeles, me corro 5 columnas
-					MOV R12, RDX
-					SUB R12, R11
-					CMP R12, 5
-					JA .for2
-
-				.finFila:
-
-					; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
-					PUSH R10
-					PUSH RDX
-					MOV RAX, RDX
-					MOV R10, 3
-					MUL R10
-					MOV R10, RAX
-
-					LEA RSI, [R13 + R10 - 16]
-					LEA RDI, [RBX + R10 - 16]
-					POP R10
-					POP RDX
-					; PASO LOS ULTIMOS 16 BYTES A XMM0
-					MOVDQU XMM0, [RDI]	
-					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
-					MOVDQU XMM1, [RSI]
-					PSHUFB XMM1, [unByte]
-					MOVQ R12, XMM1
-					; SHIFTEO EL REGISTRO PARA QUE ME QUEDEN LOS 5 PIXELES EN LOS PRIMEROS 15 BYTES DE XMM0
+					;DEJAR EN XMM0 EL  PIXEL QUE VAMOS A ESCRIBIR
+					MOVDQU [RSI], XMM0
+					LEA RSI, [RSI+3]
+					LEA RDI, [RDI+3]
+									
+					;AUMENTAR Y SEGUIR
+					ADD R11, 1				; como agarro 1 pixel, me corro 1 columna
+					;VEMOS SI TOCAMOS PADDING
 					
-					; XMM0: [B|R|G|B|R|G|B|R|G|B|R|G|B|R|G|B]
-					PSRLDQ XMM0, 1 
-					; XMM0: [R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|0]
-					; AHORA QUIERO PROCESAR LOS PRIMEROS 3 PIXELES Y LOS ULTIMOS 2 COPIARLOS IGUALES
-					; ENTONCES ME GUARDO LOS ULTIMOS 2 PORQUE AHORA LOS VOY A PISAR
-					MOVDQU XMM6, XMM0
-					; XMM6: [R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|0]
-					PSHUFB XMM6, [ceros]
-					; XMM6: [0|0|0|0|0|0|0|0|0|R|G|B|R|G|B|0]
-					PSLLDQ XMM6, 1
-					; XMM6: [0|0|0|0|0|0|0|0|0|0|R|G|B|R|G|B]
+					CMP R11, RDX
 					
-					;////////////// PROCESO 1er PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM8, XMM0
-					;XMM8 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
-					;////////////// PROCESO 2do PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM9, XMM0
-					;XMM2 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
-					;////////////// PROCESO 3er PIXEL ///////////////
-					CALL procesarPixel
-					MOVDQU XMM10, XMM0
+					LEA R15, [R15 + 3] ; R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
 					
-					PSLLDQ XMM8, 1
-					PSLLDQ XMM9, 4					
-					PSLLDQ XMM10, 7
-
-					XORPD XMM4, XMM4
-					MOVQ XMM4, R12
-
-					;JUNTO TODOS LOS REGISTROS
-					POR XMM8, XMM9
-					POR XMM8, XMM10
-					POR XMM8, XMM4
-					POR XMM8, XMM6
-					MOVDQU [RSI], XMM8
-
+					
+					JL .for2
+					
 				.endfor2:
 					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
-					; COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
+					;COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
 					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
-					LEA RDI, [RBX + R8]
-					LEA RSI, [R13 + R9]
+					XOR RAX, RAX
+					MOV R12, RDX
+					MOV RAX, RDX
+					ADD RAX, RAX
+					ADD R12, RAX
+					;R12: 3*cols
+					MOV RAX, R9
+					;RAX: row_size
+					SUB RAX, R12
+					; RAX: row_size - 3*cols = padding
+					LEA RSI, [RSI + RAX]
+					
+					XOR RAX, RAX
+					MOV R12, RDX
+					MOV RAX, RDX
+					ADD RAX, RAX
+					ADD R12, RAX
+					MOV RAX, R8
+					SUB RAX, R12
+					LEA RDI, [RDI + RAX]
+					
 
 					INC R10
 					;CMP R10, 3
 					;JB .for1
 
-					CMP R10, 2
+					CMP DWORD R10, 2
 					JBE .for1 
-
-					LEA R15, [RDI]
+					LEA RBX, [RBX + R8]
+					LEA R15, [RBX]
 
 				JMP .for1
 		
@@ -264,22 +173,6 @@ ldr_asm:
 			POP RBP
 			RET
  
-procesarPixel:
-	PUSH RBP
-	MOV RBP, RSP
-
-	CALL sumaRGB
-	;XMM0 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
-	CALL minMax
-	;XMM0 = byte[MIN(MAX(p_s->r + ((p_s->r * sumargb) / max),0)), idem gren, idem blue, 0]
-	;DEJAR EN XMM0 EL  PIXEL QUE VAMOS A ESCRIBIR
-	LEA RSI, [RSI+3]
-	LEA RDI, [RDI+3]
-	;CMP R11, RDX
-	LEA R15, [R15 + 3] ; R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
-
-	POP RBP
-	RET
 
 sumaRGB:
 	
@@ -413,7 +306,7 @@ minMax:
 		;PARA MULTIPLICAR POR ALFA
 		;MOV R12, RDI
 		XORPD XMM14, XMM14
-		MOV R12, [RSP + 80]
+		MOV R12, [RSP + 64]
 		MOVQ XMM14, R12
 		XORPD XMM1, XMM1
 		PADDQ XMM1, XMM14
