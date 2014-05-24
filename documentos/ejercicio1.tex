@@ -51,6 +51,17 @@ Compile el código de C con optimizaciones del compilador, por ejemplo, pasando 
 	se accedan como tiras de 64 bits y analizar la performance.
 	
 \newpage
+
+\subsection{An\'alisis previo}
+El filtro de tiles define un rect\'angulo en una imagen en color. La funci\'on debe replicar dicho sector de la im\'agen en el resto de la imagen original.
+Para esto, se nos ocurrieron tres formas de encararlo: con la f\'ormula dada en el enunciado (versi\'on C), guardando el primer elemento del rect\'angulo a copiar y guardando un puntero a ese primer elemento.
+
+Formula:
+
+i y j representan fila y columna respectivamente.
+
+dst(i,j) = src [(i mod tamy)+offsety][(j mod tamx)+offsetx]
+
 \subsection{Implementaci\'on en C}
 
 La implementaci\'on en C del ejercicio tiles es tomar un rect\'angulo de la imagen original y repartirla por la imagen destino. Se resuelve con dos ciclos for anidados usando la forma dada en el enuciado.

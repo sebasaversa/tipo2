@@ -72,12 +72,31 @@ En el presente trabajo se describe el an\'alisis de siertos filtros para im\'age
 
 \section{Objetivos generales}
 
-El objetivo de este Trabajo Pr\'actico es el aprendizaje de las instrucciones SIMD mediante su uso en filtros de im\'agenes, y la comparaci\'on de tiempos entre el algoritmo en assembler realizado con \'estas instrucciones y el mismo algoritmo en C.
-
+El objetivo de este Trabajo Pr\'actico fue el aprendizaje de las instrucciones SIMD(Single Instruction, Multiple Data) mediante su uso en filtros de im\'agenes, y las comparaciones entre los algoritmos en assembler realizados con \'estas instrucciones y los mismos algoritmos en C.
+Tanto en los lenguajes assembler como C se compil\'o y ensambl\'o para arquitecturas Intel x64.
 
 \section{Contexto}
 
-
+Los algoritmos descriptos y analizados fueron probados en las computadoras de los laboratorios de la facultad. Todas las comparaciones fueron realizadas en las mismas computadoras para un correcto an\'alisis.
+Las implementaciones en assembler fueron hechas específicamente para el uso de las instrucciones SIMD de Intel x64 con los siguientes par\'ametros:
+\begin{itemize}
+	\item -felf64:
+	\item -g:
+	\item -F:
+	\item dwarf:
+\end{itemize}
+Los sigientes par\'ametros fueron usados en el compilador de C:
+\begin{itemize}
+	\item ggdb:
+	\item -Wall:
+	\item -std=c99:
+	\item -pedantic:
+	\item -m64:
+	
+	\item pkg-config:
+	\item --cflags:
+	\item --libs opencv:
+\end{itemize}
 
 
 %\newpage
