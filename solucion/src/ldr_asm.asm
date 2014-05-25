@@ -171,6 +171,7 @@ ldr_asm:
 					POR XMM8, XMM11
 					POR XMM8, XMM13
 					MOVDQU [RSI], XMM8
+					LEA RSI, [RSI + 15] 
 
 
 					ADD R11, 5				; como agarro 5 pixeles, me corro 5 columnas
@@ -276,7 +277,7 @@ procesarPixel:
 	CALL minMax
 	;XMM0 = byte[MIN(MAX(p_s->r + ((p_s->r * sumargb) / max),0)), idem gren, idem blue, 0]
 	;DEJAR EN XMM0 EL  PIXEL QUE VAMOS A ESCRIBIR
-	LEA RSI, [RSI+3]
+	;LEA RSI, [RSI+3]
 	LEA RDI, [RDI+3]
 	;CMP R11, RDX
 	LEA R15, [R15 + 3] ; R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
