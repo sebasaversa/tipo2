@@ -146,11 +146,11 @@ ldr_asm:
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM8, XMM0
-					;XMM1 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
+					;XMM8 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 2do PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM9, XMM0
-					;XMM2 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
+					;XMM9 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 3er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM10, XMM0
@@ -166,10 +166,10 @@ ldr_asm:
 					PSLLDQ XMM11, 9
 					PSLLDQ XMM13, 12
 
-					POR XMM8, XMM2
-					POR XMM8, XMM3
-					POR XMM8, XMM4
-					POR XMM8, XMM5
+					POR XMM8, XMM9
+					POR XMM8, XMM10
+					POR XMM8, XMM11
+					POR XMM8, XMM13
 					MOVDQU [RSI], XMM8
 
 
