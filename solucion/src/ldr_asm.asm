@@ -83,6 +83,7 @@ ldr_asm:
 	LEA R15, [RDI]
 	LEA R13, [RSI]
 	LEA R14, [RDI]
+	MOV R9, [RSP + 48]
 	XOR R10, R10	; R10: i
 	.for1:
 		
@@ -127,7 +128,8 @@ ldr_asm:
 					CMP R12, 5
 					JA .for2
 					
-						; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
+					; SI ME QUEDAN LOS ULTIMOS 16 BYTES DE LA FILA, SIGO ACA:
+					; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
 					PUSH R10
 					PUSH RDX
 					MOV RAX, RDX
@@ -149,17 +151,17 @@ ldr_asm:
 					MOVDQU XMM8, XMM0
 					;XMM8 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 2do PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM9, XMM0
 					;XMM9 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 3er PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM10, XMM0
 					;////////////// PROCESO 4to PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM11, XMM0
 					;////////////// PROCESO 5to PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM13, XMM0
 
 					PSLLDQ XMM9, 3					
@@ -180,6 +182,8 @@ ldr_asm:
 					SUB R12, R11
 					CMP R12, 5
 					JA .for2
+					
+					; SI ME QUEDAN LOS ULTIMOS 16 BYTES DE LA FILA, SIGO ACA:
 
 				.finFila:
 
@@ -223,23 +227,20 @@ ldr_asm:
 					LEA RDI, [RDI + 1]
 					LEA R15, [R15 + 1]
 					;////////////// PROCESO 1er PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM8, XMM0
 					;XMM8 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 2do PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM9, XMM0
 					;XMM2 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 3er PIXEL ///////////////
-					CALL procesarPixel
+					;CALL procesarPixel
 					MOVDQU XMM10, XMM0
-					
 					PSLLDQ XMM8, 1
 					PSLLDQ XMM9, 4					
 					PSLLDQ XMM10, 7
 
-					
-					
 					;JUNTO TODOS LOS REGISTROS
 					POR XMM8, XMM9
 					POR XMM8, XMM10
@@ -255,7 +256,7 @@ ldr_asm:
 					;CMP R10, RCX
 					;JAE .endfor1
 					 
-					LEA R13, [R13 + R9]
+					LEA R13, [R13 + R8]
 					LEA R14, [R14 + R8]					
 
 					LEA RDI, [R14]
@@ -286,7 +287,7 @@ procesarPixel:
 	;XMM0 = byte[MIN(MAX(p_s->r + ((p_s->r * sumargb) / max),0)), idem gren, idem blue, 0]
 	;DEJAR EN XMM0 EL  PIXEL QUE VAMOS A ESCRIBIR
 	;LEA RSI, [RSI+3]
-	LEA RDI, [RDI+3]
+	LEA RDI, [RDI + 3]
 	;CMP R11, RDX
 	LEA R15, [R15 + 3] ; R15 APUNTA AL PIXEL [-2][-2] PARA ARRANCAR A SUMAR
 
@@ -347,7 +348,6 @@ sumaRGB:
 		CALL sumaFilas
 		PADDW XMM0, XMM7
 
-		
 	POP R15
 	POP R14
  	POP RBP
@@ -426,8 +426,9 @@ minMax:
 		;PARA MULTIPLICAR POR ALFA
 		;MOV R12, RDI
 		XORPD XMM14, XMM14
-		MOV R12, [RSP + 80]
-		MOVQ XMM14, R12
+		;MOV R12, [RSP + 80]
+		;MOV R8, 20.0
+		MOVQ XMM14, R9
 		XORPD XMM1, XMM1
 		PADDQ XMM1, XMM14
 		PSLLDQ XMM1, 4
