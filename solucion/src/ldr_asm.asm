@@ -199,7 +199,7 @@ ldr_asm:
 					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
 					MOVDQU XMM1, [RSI]
 					PSHUFB XMM1, [unByte]
-					MOVQ R12, XMM1
+					MOVQ R14, XMM1
 					; SHIFTEO EL REGISTRO PARA QUE ME QUEDEN LOS 5 PIXELES EN LOS PRIMEROS 15 BYTES DE XMM0
 					
 					; XMM0: [B|R|G|B|R|G|B|R|G|B|R|G|B|R|G|B]
@@ -214,6 +214,7 @@ ldr_asm:
 					PSLLDQ XMM6, 1
 					; XMM6: [0|0|0|0|0|0|0|0|0|0|R|G|B|R|G|B]
 					
+					LEA RDI, [RDI + 1]
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM8, XMM0
@@ -231,7 +232,7 @@ ldr_asm:
 					PSLLDQ XMM10, 7
 
 					XORPD XMM4, XMM4
-					MOVQ XMM4, R12
+					MOVQ XMM4, R14
 
 					;JUNTO TODOS LOS REGISTROS
 					POR XMM8, XMM9
