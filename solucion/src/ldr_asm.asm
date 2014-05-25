@@ -129,13 +129,14 @@ ldr_asm:
 					
 						; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
 					PUSH R10
+					PUSH RDX
 					MOV RAX, RDX
 					MOV R10, 3
 					MUL R10
 					MOV R10, RAX
-
 					LEA RSI, [R13 + R10 - 16]
 					LEA RDI, [RBX + R10 - 16]
+					POP RDX
 					POP R10
 					MOVDQU XMM0, [RDI]
 					MOVDQU [RSI], XMM0
@@ -144,32 +145,32 @@ ldr_asm:
 				.else:
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
-					MOVDQU XMM1, XMM0
+					MOVDQU XMM8, XMM0
 					;XMM1 = byte[MIN(MAX(p_s1->r + ((p_s1->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 2do PIXEL ///////////////
 					CALL procesarPixel
-					MOVDQU XMM2, XMM0
+					MOVDQU XMM9, XMM0
 					;XMM2 = byte[MIN(MAX(p_s2->r + ((p_s2->r * sumargb) / max),0)), idem gren, idem blue, 0]
 					;////////////// PROCESO 3er PIXEL ///////////////
 					CALL procesarPixel
-					MOVDQU XMM3, XMM0
+					MOVDQU XMM10, XMM0
 					;////////////// PROCESO 4to PIXEL ///////////////
 					CALL procesarPixel
-					MOVDQU XMM4, XMM0
+					MOVDQU XMM11, XMM0
 					;////////////// PROCESO 5to PIXEL ///////////////
 					CALL procesarPixel
-					MOVDQU XMM5, XMM0
+					MOVDQU XMM13, XMM0
 
-					PSLLDQ XMM2, 3					
-					PSLLDQ XMM3, 6
-					PSLLDQ XMM4, 9
-					PSLLDQ XMM5, 12
+					PSLLDQ XMM9, 3					
+					PSLLDQ XMM10, 6
+					PSLLDQ XMM11, 9
+					PSLLDQ XMM13, 12
 
-					POR XMM1, XMM2
-					POR XMM1, XMM3
-					POR XMM1, XMM4
-					POR XMM1, XMM5
-					MOVDQU [RSI], XMM1
+					POR XMM8, XMM2
+					POR XMM8, XMM3
+					POR XMM8, XMM4
+					POR XMM8, XMM5
+					MOVDQU [RSI], XMM8
 
 
 					ADD R11, 5				; como agarro 5 pixeles, me corro 5 columnas
@@ -190,8 +191,8 @@ ldr_asm:
 
 					LEA RSI, [R13 + R10 - 16]
 					LEA RDI, [RBX + R10 - 16]
-					POP R10
 					POP RDX
+					POP R10
 					; PASO LOS ULTIMOS 16 BYTES A XMM0
 					MOVDQU XMM0, [RDI]	
 					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
@@ -250,7 +251,7 @@ ldr_asm:
 					;JB .for1
 
 					CMP R10, 2
-					JBE .for1 
+					JB .for1 
 
 					LEA R15, [RDI]
 
