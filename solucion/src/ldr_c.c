@@ -17,7 +17,7 @@ void ldr_c    (
 {
     unsigned char (*src_matrix)[src_row_size] = (unsigned char (*)[src_row_size]) src;
     unsigned char (*dst_matrix)[dst_row_size] = (unsigned char (*)[dst_row_size]) dst;
-	unsigned int max = 5 * 5 * 255 * 3 * 255;
+	int max = 5 * 5 * 255 * 3 * 255;
 
     for (int i = 0; i < filas; i++){
         for (int j = 0; j < cols; j++){
@@ -36,7 +36,7 @@ void ldr_c    (
 						green += p_p->g;
 						blue += p_p->b;}}
 				//aca termino de sumar todos los colores
-				unsigned int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
+				int sumargb = red + green + blue; //aca tengo la suma de los 3 colores
 				sumargb *= alfa;
 				p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
 				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
