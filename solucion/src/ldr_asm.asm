@@ -82,7 +82,7 @@ ldr_asm:
 	LEA RBX, [RDI]
 	LEA R15, [RDI]
 	LEA R13, [RSI]
-
+	LEA R14, [RDI]
 	XOR R10, R10	; R10: i
 	.for1:
 		
@@ -135,7 +135,7 @@ ldr_asm:
 					MUL R10
 					MOV R10, RAX
 					LEA RSI, [R13 + R10 - 16]
-					LEA RDI, [RBX + R10 - 16]
+					LEA RDI, [R14 + R10 - 16]
 					POP RDX
 					POP R10
 					MOVDQU XMM0, [RDI]
@@ -143,6 +143,7 @@ ldr_asm:
 					JMP .endfor2	
 
 				.else:
+					
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM8, XMM0
@@ -189,17 +190,21 @@ ldr_asm:
 					MOV R10, 3
 					MUL R10
 					MOV R10, RAX
-
+					LEA R15, [RBX + R10 - 22]
 					LEA RSI, [R13 + R10 - 16]
-					LEA RDI, [RBX + R10 - 16]
+
+					LEA RDI, [R14 + R10 - 16]
 					POP RDX
 					POP R10
+					
+					
 					; PASO LOS ULTIMOS 16 BYTES A XMM0
 					MOVDQU XMM0, [RDI]	
 					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
 					MOVDQU XMM1, [RSI]
 					PSHUFB XMM1, [unByte]
-					MOVQ R14, XMM1
+					XORPD XMM4, XMM4
+					MOVDQU XMM4, XMM1
 					; SHIFTEO EL REGISTRO PARA QUE ME QUEDEN LOS 5 PIXELES EN LOS PRIMEROS 15 BYTES DE XMM0
 					
 					; XMM0: [B|R|G|B|R|G|B|R|G|B|R|G|B|R|G|B]
@@ -213,8 +218,10 @@ ldr_asm:
 					; XMM6: [0|0|0|0|0|0|0|0|0|R|G|B|R|G|B|0]
 					PSLLDQ XMM6, 1
 					; XMM6: [0|0|0|0|0|0|0|0|0|0|R|G|B|R|G|B]
-					
+					POR XMM6, XMM4
+					; XMM6: [B|0|0|0|0|0|0|0|0|0|R|G|B|R|G|B]
 					LEA RDI, [RDI + 1]
+					LEA R15, [R15 + 1]
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM8, XMM0
@@ -231,13 +238,11 @@ ldr_asm:
 					PSLLDQ XMM9, 4					
 					PSLLDQ XMM10, 7
 
-					XORPD XMM4, XMM4
-					MOVQ XMM4, R14
-
+					
+					
 					;JUNTO TODOS LOS REGISTROS
 					POR XMM8, XMM9
 					POR XMM8, XMM10
-					POR XMM8, XMM4
 					POR XMM8, XMM6
 					MOVDQU [RSI], XMM8
 
@@ -245,19 +250,21 @@ ldr_asm:
 					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
 					; COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
 					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
-					LEA RBX, [RBX + R8]
+					
+					INC R10
+					;CMP R10, RCX
+					;JAE .endfor1
+					 
 					LEA R13, [R13 + R9]
-					LEA RDI, [RBX]
+					LEA R14, [R14 + R8]					
+
+					LEA RDI, [R14]
 					LEA RSI, [R13]
 
-					INC R10
-					;CMP R10, 3
-					;JB .for1
-
 					CMP R10, 2
-					JB .for1 
-
-					LEA R15, [RDI]
+					JBE .for1
+					LEA RBX, [RBX + R8]
+					LEA R15, [RBX]
 
 				JMP .for1
 		
@@ -412,7 +419,8 @@ minMax:
 		MOVDQU XMM5, XMM0		; XMM5 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
 		XORPD XMM14, XMM14
 		PUNPCKHWD XMM5, XMM14 	; XMM5 = [sumaRGB |sumaRGB |sumaRGB |sumaRGB] 
-		MOVDQU XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
+		;MOVDQU XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
+		MOVD XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
 		PSHUFB XMM0, [COOO] 	; XMM0 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
 		MOVDQU XMM2, XMM0
 		;PARA MULTIPLICAR POR ALFA
