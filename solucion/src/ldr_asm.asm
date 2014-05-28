@@ -30,7 +30,7 @@ ceros:		DB 0x80, 0x80, 0x80, 0x80
 			DB 0x80, 0x80, 0x80, 0x80,
 			DB 0x80, 0x09, 0x0A, 0x0B,
 			DB 0x0C, 0x0D, 0x0E, 0x80
-		
+
 section .text
 ;void ldr_c    (
 ;    unsigned char *src,     RDI
@@ -76,7 +76,7 @@ ldr_asm:
 	PUSH R13
 	PUSH R14
 	PUSH R15
-	
+
     ;for (int i = 0; i < filas; i++) {
 
 	LEA RBX, [RDI]
@@ -86,7 +86,7 @@ ldr_asm:
 	MOV R9, [RSP + 48]
 	XOR R10, R10	; R10: i
 	.for1:
-		
+
 		;CONDICION
 		;CMP ECX, R10			; ECX: filas
 		CMP R10, RCX			; ECX: filas
@@ -97,7 +97,7 @@ ldr_asm:
 			.for2:
 				CMP R11, RDX
 				JE .endfor2
-				
+
 				CMP R10, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
 				JBE .copioFila
 				; SI NO:
@@ -116,7 +116,7 @@ ldr_asm:
 					LEA RSI, [RSI + 6]
 					ADD R11, 2
 					JMP .for2
-		
+
 				.copioFila:
 					MOVDQU XMM0, [RDI]
 					MOVDQU [RSI], XMM0
@@ -127,7 +127,7 @@ ldr_asm:
 					SUB R12, R11
 					CMP R12, 5
 					JA .for2
-					
+
 					; SI ME QUEDAN LOS ULTIMOS 16 BYTES DE LA FILA, SIGO ACA:
 					; HAGO LA CUENTA PARA DEJAR RSI Y RDI DE FORMA DE PROCESAR LOS ULTIMOS 16 BYTES
 					PUSH R10
@@ -145,7 +145,7 @@ ldr_asm:
 					JMP .endfor2	
 
 				.else:
-					
+
 					;////////////// PROCESO 1er PIXEL ///////////////
 					CALL procesarPixel
 					MOVDQU XMM8, XMM0
@@ -182,7 +182,7 @@ ldr_asm:
 					SUB R12, R11
 					CMP R12, 5
 					JA .for2
-					
+
 					; SI ME QUEDAN LOS ULTIMOS 16 BYTES DE LA FILA, SIGO ACA:
 
 				.finFila:
@@ -200,8 +200,8 @@ ldr_asm:
 					LEA RDI, [R14 + R10 - 16]
 					POP RDX
 					POP R10
-					
-					
+
+
 					; PASO LOS ULTIMOS 16 BYTES A XMM0
 					MOVDQU XMM0, [RDI]	
 					; GUARDO EL PRIMER BYTE PARA RESTAURARLO DESPUES (PORQUE YA LO PROCESE EN LA PASADA ANTERIOR)
@@ -210,7 +210,7 @@ ldr_asm:
 					XORPD XMM4, XMM4
 					MOVDQU XMM4, XMM1
 					; SHIFTEO EL REGISTRO PARA QUE ME QUEDEN LOS 5 PIXELES EN LOS PRIMEROS 15 BYTES DE XMM0
-					
+
 					; XMM0: [B|R|G|B|R|G|B|R|G|B|R|G|B|R|G|B]
 					PSRLDQ XMM0, 1 
 					; XMM0: [R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|0]
@@ -251,11 +251,11 @@ ldr_asm:
 					; NO PODES TENER UN PUNTERO EN RAX PORQUE LO USAMOS PARA SUMARGB
 					; COPIE Y PEGUE EL QUE USE EN TILES PARA IR ABAJO
 					; PONGO LAS COLUMNAS LAS *3 Y LE RESTO EL ROW SIZE
-					
+
 					INC R10
 					;CMP R10, RCX
 					;JAE .endfor1
-					 
+
 					LEA R13, [R13 + R8]
 					LEA R14, [R14 + R8]					
 
@@ -268,7 +268,7 @@ ldr_asm:
 					LEA R15, [RBX]
 
 				JMP .for1
-		
+
 		.endfor1:
 			POP R15
 			POP R14
@@ -295,7 +295,7 @@ procesarPixel:
 	RET
 
 sumaRGB:
-	
+
 	PUSH RBP					
 	MOV RBP, RSP
 	PUSH R14
@@ -305,15 +305,15 @@ sumaRGB:
 		;R15 ; puntero al pixel que estoy mirando - (2,2)
 		MOVDQU XMM1, [R15]
 		;XMM1: [R11|G11|B11|R12|G12|B12|R13|G13|B13|R1$|G14|B14|R15|G15|B15|0]
-		
+
 		LEA R15, [R15 + R8]
 		MOVDQU XMM2, [R15]
 		;XMM2: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
-				
+
 		LEA R15, [R15 + R8]
 		MOVDQU XMM3, [R15]
 		;XMM3: [R31|G31|B31|R32|G32|B32|R33|G33|B33|R34|G34|B34|R35|G35|B35|0]
-				
+
 		LEA R15, [R15 + R8]
 		MOVDQU XMM4, [R15]
 		;XMM4: [R41|G41|B41|R42|G42|B42|R43|G43|B43|R44|G44|B44|R45|G45|B45|0]
@@ -321,7 +321,7 @@ sumaRGB:
 		LEA R15, [R15 + R8]      
 		MOVDQU XMM5, [R15]       
 		;XMM5: [R51|G51|B51|R52|G52|B52|R53|G53|B53|R54|G54|B54|R55|G55|B55|0]
-		
+
 		PSLLDQ XMM1, 1
 		PSRLDQ XMM1, 1
 		PSLLDQ XMM2, 1
@@ -333,7 +333,7 @@ sumaRGB:
 		PSLLDQ XMM5, 1
 		PSRLDQ XMM5, 1
 		;CON ESTO ELIMINO EL PIXEL 16 DE TODOS LOS XMM
-		
+
 		;///////////////////		SUMO LAS FILAS 1 Y 2 			///////////////////
 		CALL sumaFilas	
 		MOVDQU XMM7, XMM0
@@ -370,7 +370,7 @@ sumaFilas:
 		;XMM1: [B13|0	|R14|0	|G14|0	|B14|0	|R15|0	|G15|0	|B15|0	|0|0]
 		PADDW XMM0, XMM1
 		;XMM0: [R11+B13 |G11+R14 |B11+G14 |R12+B14 |G12+R15 |B12+G15 |R13+B15 |G13+0]
-		
+
 		; Agarro la fila 2
 		MOVDQU XMM12, XMM2
 		;XMM12: [R21|G21|B21|R22|G22|B22|R23|G23|B23|R24|G24|B24|R25|G25|B25|0]
@@ -385,13 +385,13 @@ sumaFilas:
 		PHADDW XMM0, XMM12
 		;XMM0:  [R11+B13 +G11+R14 	|B11+G14+R12+B14 	|G12+R15+B12+G15 |R13+B15 +G13+0
 		;		|R21+B23 +G21+R24 	|B21+G24+R22+B24 	|G22+R25+B22+G25 |R23+B25 +G23+0]
-		
+
 		PHADDW XMM0, XMM0
 		;XMM0:  [R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0 	XX
 		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	|G22+R25+B22+G25 +R23+B25 +G23+0	XX
 		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	|G12+R15+B12+G15 +R13+B15 +G13+0
 		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	|G22+R25+B22+G25 +R23+B25 +G23+0		
-		
+
 		PHADDW XMM0, XMM0
 		;XMM0:	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
 		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	XX
@@ -401,12 +401,12 @@ sumaFilas:
 		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	
 		;		|R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	
 		;		|R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	
-		
+
 		PHADDW XMM0, XMM0
 		;XMM0: 	[R11+B13 +G11+R14 	+B11+G14+R12+B14 	+G12+R15+B12+G15 +R13+B15 +G13+0 	XX
 		;		+R21+B23 +G21+R24 	+B21+G24+R22+B24 	+G22+R25+B22+G25 +R23+B25 +G23+0	XX
 		;		|basura |basura |basura |basura |basura |basura |basura]
-		
+
 		; XMM0: [sumargb(deLasFilas1Y2) |basura |basura |basura |basura |basura |basura |basura]
 
 	POP RBP
@@ -419,34 +419,39 @@ minMax:
 		MOVDQU XMM5, XMM0		; XMM5 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
 		XORPD XMM14, XMM14
 		PUNPCKHWD XMM5, XMM14 	; XMM5 = [sumaRGB |sumaRGB |sumaRGB |sumaRGB] 
-		;MOVDQU XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
 		MOVD XMM0, [RDI]		; XMM0 = [R|G|B|R |G|B|R|G |B|R|G|B |R|G|B|0]
 		PSHUFB XMM0, [COOO] 	; XMM0 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
-		MOVDQU XMM2, XMM0
+		MOVDQU XMM7, XMM0
 		;PARA MULTIPLICAR POR ALFA
-		;MOV R12, RDI
 		XORPD XMM14, XMM14
-		;MOV R12, [RSP + 80]
-		;MOV R8, 20.0
 		MOVQ XMM14, R9
 		XORPD XMM1, XMM1
 		PADDQ XMM1, XMM14
 		PSLLDQ XMM1, 4
 		PADDQ XMM1, XMM14
-		PSLLDQ XMM1, 4
-		PADDQ XMM1, XMM14
-		PSLLDQ XMM1, 4
-		PADDQ XMM1, XMM14
+		; XMM1 = [alfa    				|alfa   			] 
 		; XMM0 = [R|0|0|0 	|G|O|O|O 	|B|O|O|O 	|O|O|O|O] 
 		; XMM5 = [sumaRGB	|sumaRGB 	|sumaRGB  	|sumaRGB] 
-		; XMM1 = [alfa    	|alfa		|alfa		|alfa   ] 
-		CVTDQ2PS XMM0, XMM0
-		CVTDQ2PS XMM1, XMM1
-		CVTDQ2PS XMM5, XMM5
-		MULPS XMM1, XMM5 								
-		; XMM1 = [alfa*sumaRGB	 |alfa*sumaRGB	 |alfa*sumaRGB	 |alfa*sumaRGB	] 
-		MULPS XMM0, XMM1
-		; XMM0 = [alfa*sumaRGB*R |alfa*sumaRGB*G |alfa*sumaRGB*B |0	] 
+		MOVDQU XMM2, XMM0
+		PSRLDQ XMM2, 8 
+		CVTDQ2PD XMM0, XMM0
+		CVTDQ2PD XMM2, XMM2
+		; XMM0 = float[R|0|0|0|0|O|O|O 	|G|O|O|O|O|O|O|O] 
+		; XMM2 = float[B|0|0|0|0|O|O|O 	|0|O|O|O|O|O|O|O] 
+		
+		CVTDQ2PD XMM1, XMM1
+		; XMM1 = float[alfa    				|alfa ] 
+		CVTDQ2PD XMM5, XMM5
+		; XMM5 = float[sumaRGB				|sumaRGB ] 
+		
+		MULPD XMM1, XMM5
+		; XMM1 = float[alfa * sumaRGB    	|alfa * sumaRGB] 
+
+		MULPD XMM0, XMM1
+		MULPD XMM2, XMM1
+		; XMM0 = float[alfa * sumaRGB * R 	|alfa * sumaRGB * G] 
+		; XMM2 = float[alfa * sumaRGB * B	|0] 
+
 
 		;ALFA * SUMA * SRC / MAX
 		MOV R12, 4876875
@@ -456,24 +461,26 @@ minMax:
 		PADDQ XMM5, XMM14 
 		PSLLDQ XMM5, 4 
 		PADDQ XMM5, XMM14
-		PSLLDQ XMM5, 4
-		PADDQ XMM5, XMM14
-		PSLLDQ XMM5, 4
-		PADDQ XMM5, XMM14 
-		CVTDQ2PS XMM5, XMM5 
-		DIVPS XMM0, XMM5
-		; XMM0 = [(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |(alfa*sumaRGB*R)/MAX |0	] 
+		CVTDQ2PD XMM5, XMM5 
+		DIVPD XMM0, XMM5
+		DIVPD XMM2, XMM5
+		; XMM0 = float[alfa * sumaRGB * R / MAX	|alfa * sumaRGB * G / MAX] 
+		; XMM2 = float[alfa * sumaRGB * B / MAX	|0] 
+
 
 		; VAR + SRC
-		; XMM2 = [R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
-		CVTTPS2DQ XMM0, XMM0
-		PADDD XMM0, XMM2
+		; XMM7 = int[R|0|0|0 |G|O|O|O |B|O|O|O |O|O|O|O] 
+		CVTTPD2DQ XMM0, XMM0
+		CVTTPD2DQ XMM2, XMM2
+		PSLLDQ XMM2, 8
+		POR XMM0, XMM2
+		PADDD XMM0, XMM7
 		CVTDQ2PS XMM0, XMM0 
-		; XMM0 = [((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
+		; XMM0 = float[((alfa*sumaRGB*R)/MAX)+SRCr |((alfa*sumaRGB*R)/MAX)+SRCg |((alfa*sumaRGB*R)/MAX)+SRCb |0	] 
 
-		XORPD XMM2, XMM2	;VEO QUIENES SON MAS GRANDES QUE 0
-		MAXPS XMM0, XMM2
-		
+		XORPD XMM7, XMM7	;VEO QUIENES SON MAS GRANDES QUE 0
+		MAXPS XMM0, XMM7
+
 		MOV R12, 255
 		XORPD XMM14, XMM14
 		MOVQ XMM14, R12
@@ -490,7 +497,7 @@ minMax:
 		;XMM5 = [255,255,255,255]
 		MINPS XMM0, XMM5			; EN LOS QUE SON MAYORES A 255 PONGO 1s, EN LOS OTROS, 0s
 		CVTTPS2DQ XMM0, XMM0
-		
+
 		PSHUFB XMM0, [RGB]
 		;sumargb *= alfa;
 		;p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
