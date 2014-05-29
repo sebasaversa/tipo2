@@ -83,7 +83,8 @@ ldr_asm:
 	LEA R15, [RDI]
 	LEA R13, [RSI]
 	LEA R14, [RDI]
-	MOV R9, [RSP + 48]
+	XOR R9, R9
+	MOV R9D, [RSP + 48]
 	XOR R10, R10	; R10: i
 	.for1:
 
@@ -443,7 +444,6 @@ minMax:
 		; XMM1 = float[alfa    				|alfa ] 
 		CVTDQ2PD XMM5, XMM5
 		; XMM5 = float[sumaRGB				|sumaRGB ] 
-		
 		MULPD XMM1, XMM5
 		; XMM1 = float[alfa * sumaRGB    	|alfa * sumaRGB] 
 
@@ -451,7 +451,6 @@ minMax:
 		MULPD XMM2, XMM1
 		; XMM0 = float[alfa * sumaRGB * R 	|alfa * sumaRGB * G] 
 		; XMM2 = float[alfa * sumaRGB * B	|0] 
-
 
 		;ALFA * SUMA * SRC / MAX
 		MOV R12, 4876875
