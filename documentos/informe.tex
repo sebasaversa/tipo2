@@ -58,7 +58,10 @@
 \thispagestyle{empty}
 \vfill
 \begin{abstract}
-En el presente trabajo se describe el an\'alisis de siertos filtros para im\'agenes, comparando las versiones realizadas en C y en assembler con procesamiento SIMD
+En el presente trabajo se describe el an\'alisis de siertos filtros para im\'agenes, comparando las versiones realizadas en C y en assembler con procesamiento SIMD.
+
+
+El an\'alisis principal ser\'a el tiempo que tardan dichos algoritmos y c\'omo se ha encarado el algoritmo en cada lenguaje.
 \end{abstract}
 \newpage
 \thispagestyle{empty}
@@ -74,6 +77,8 @@ En el presente trabajo se describe el an\'alisis de siertos filtros para im\'age
 
 El objetivo de este Trabajo Pr\'actico fue el aprendizaje de las instrucciones SIMD(Single Instruction, Multiple Data) mediante su uso en filtros de im\'agenes, y las comparaciones entre los algoritmos en assembler realizados con \'estas instrucciones y los mismos algoritmos en C.
 Tanto en los lenguajes assembler como C se compil\'o y ensambl\'o para arquitecturas Intel x64.
+
+
 
 \section{Contexto}
 
@@ -102,13 +107,13 @@ Los sigientes par\'ametros fueron usados en el compilador de C:
 %\newpage
 %\input{introduccion}
 \newpage
-\input{ejercicio1}
+\input{tiles}
 \newpage
-\input{ejercicio2}
+\input{popart}
 \newpage
-\input{ejercicio3}
+\input{temperature}
 \newpage
-\input{ejercicio4}
+\input{ldr}
 \newpage
 \section{Conclusiones y trabajo futuro}
 asdf4

@@ -67,7 +67,7 @@ dst(i,j) = src [(i mod tamy)+offsety][(j mod tamx)+offsetx]
 La implementaci\'on en C del ejercicio tiles es tomar un rect\'angulo de la imagen original y repartirla por la imagen destino. Se resuelve con dos ciclos for anidados usando la forma dada en el enuciado.
 
 \subsection{Implementaci\'on en assembler}
-Para la resoluci\'on en assembler creamos los dos ciclos anidados con los registros de prop\'osito general. AL comienzo del segundo siclo se hace la copia.
+Para la resoluci\'on en assembler creamos los dos ciclos anidados con los registros de prop\'osito general. AL comienzo del segundo ciclo se hace la copia.
 \begin{codesnippet}
 \begin{verbatim}
 	MOVDQU XMM0, [RDI]
@@ -84,4 +84,14 @@ El compilador genera más variables locales que las usadas en nuestro c\'odigo a
 
 \vspace*{0.3cm} \noindent
 \textbf{Experimento 2 - optimizaciones del compilador}
-El compilador ofrece los flags -O1 a -03 para distintos niveles de optimizaci\'on, asi como los flags para indicar si es assembler de intel, amd, etc. Esto ultimo hace m\'as espec\'ifico el codigo assembler y correr\'ia mejor en una maquina con el microprocesador seleccionado,aunque no correr\'ia en uno de otra marca o de una familia de microprocesadores anterior a la elegida.
+El compilador ofrece los flags -O1 a -03 para distintos niveles de optimizaci\'on, asi como los flags para indicar si es assembler de intel, amd, etc. 
+Esto ultimo hace m\'as espec\'ifico el codigo assembler y correr\'ia mejor en una maquina con el microprocesador seleccionado,aunque no correr\'ia en uno de otra marca o de una familia de microprocesadores anterior a la elegida.
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 3 - secuencial vs. vectorial}
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 4 - cpu vs. bus de memoria}
+
+\vspace*{0.3cm} \noindent
+\textbf{Experimento 5 (\textit{opcional}) - secuencial vs. vectorial (parte II)}
