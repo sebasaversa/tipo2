@@ -1,6 +1,3 @@
-MACROS
-;%include "macros.txt"
-
 global tiles_asm
 
 %define modulo(x,y) mod x,y

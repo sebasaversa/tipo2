@@ -1,0 +1,330 @@
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
+Uso: ./tp2 opciones filtro nombre_archivo_entrada parametros_filtro
+    Los filtros que se pueden aplicar son 
+       * tiles
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         tiles -i c facil.bmp 20 30 40 50
+       * popart
+           Parámetros     : 
+                         tamx ancho del mosaico
+                         tamy alto del mosaico
+                         offsetx pixels a partir de los cuales copiar del source
+                         offsety pixels a partir de los cuales copiar del source
+           Ejemplo de uso : 
+                         popart -i c facil.bmp 20 30 40 50
+       * ldr
+           Parámetros     : 
+                         alfa - valor entre -255 y 255. En caso                         de querer pasar un valor negativo anteponer --
+           Ejemplo de uso : 
+                         ldr -i c facil.bmp 120
+                         ldr -i c facil.bmp -- -200
+       * temperature
+           Parámetros     : 
+                         no tiene
+           Ejemplo de uso : 
+                         temperature -i c facil.bmp
+
+    -h, --help: 
+                Imprime esta ayuda
+
+    -i, --implementacion NOMBRE_MODO
+                                     Implementación sobre la que se ejecutará el filtro
+                                     seleccionado. Los implementaciones disponibles
+                                     son: c, asm
+
+    -t, --tiempo CANT_ITERACIONES
+                                   Mide el tiempo que tarda en ejecutar el filtro sobre la
+                                   imagen de entrada una cantidad de veces igual a
+                                   CANT_ITERACIONES
+    -f, --frames
+                          Genera frames independientes en vez de armar
+                          un archivo de video. Es utilizado para testing.
+    -o, --output CARPETA
+                          Carpeta de salida. Por defecto es la misma que la de entrada
+    -n, --nombre
+                          No aplica el filtro, solo muestra el nombre del archivo de salida
+    -v, --verbose
+                   Imprime información adicional
+
+    -w, --video 
+                                     Indica que el archivo de entrada es un video
+
