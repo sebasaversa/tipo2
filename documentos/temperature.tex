@@ -86,12 +86,10 @@ Luego armamos para dividir este valor por tres, dando el promedio.
 \begin{codesnippet}
 \begin{verbatim}
 temp_aux:
-    
     PUSH RBP					
     MOV RBP, RSP
     PUSH R12
     PUSH R13
-    
     
     XORPD XMM2, XMM2
     XORPD XMM3, XMM3
@@ -109,9 +107,7 @@ temp_aux:
         ; Ahora podemos hacer suma
     PADDQ XMM2, XMM3
     PADDQ XMM2, XMM4					; XMM2: qword[R+G+B] qword[R+G+B] 
-    
     XORPD XMM5, XMM5
-    ;///////////////////////////////////////////////////////////////////////////////////////////////////
         ; suma / 3
     MOV R12, 3
     MOV R13, 1
@@ -128,7 +124,6 @@ temp_aux:
     ADDSS XMM5, XMM1
     PSLLDQ XMM5, 4
     ADDSS XMM5, XMM0
-    
     CVTDQ2PS XMM2, XMM2
     DIVPS XMM2, XMM5					; XMM2: prom (float)
     CVTTPS2DQ XMM2, XMM2
@@ -177,7 +172,8 @@ En esta segunda parte se elije mediante m\'ascaras qu\'e pixel ser\'a devuelto.
     PUNPCKHQDQ XMM6, XMM15
         ;XMM10 == qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
         ;XMM6 ==  qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
-        ;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
+        ;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits 
+		                                       ;me alcanza para representar A):
         ;XMM10 == dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
         ;XMM6 ==  dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
     PACKUSWB XMM10, XMM6
@@ -192,27 +188,32 @@ En esta segunda parte se elije mediante m\'ascaras qu\'e pixel ser\'a devuelto.
     PAND XMM1 , XMM10 					; estos pixeles le ponemos colores[0]
     XORPD XMM0, XMM0
     POR XMM0, XMM1						; ponemos colores0 en donde va en dst
-	;///////////////////////////////////////////////////////////////////////////////////////////////////
+	;///////////////////////////////////////////////////////////////////////////////
 
         ; ponemos colores[4] en su lugar correspondiente	{  0, 0, 1151 -4t}
 
         ;Codigo no copiado. Se repite el proceso que con [colores0]
-	;///////////////////////////////////////////////////////////////////////////////////////////////////
+
+\end{verbatim}
+\end{codesnippet}
+
+\begin{codesnippet}
+\begin{verbatim}
+	;///////////////////////////////////////////////////////////////////////////////
 
         ; ponemos colores[3] en su lugar correspondiente     {0, 895 - 4t, 255}
 
         ;Codigo no copiado. Se repite el proceso que con [colores0]
-	;///////////////////////////////////////////////////////////////////////////////////////////////////
-
+	;//////////////////////////////////////////////////////////////////////////////
         ; ponemos colores[2] en su lugar correspondiente		{639 -4t, 255, -384 + 4t},	
 
         ;Codigo no copiado. Se repite el proceso que con [colores0]
-    ;///////////////////////////////////////////////////////////////////////////////////////////////////
+	;///////////////////////////////////////////////////////////////////////////////
 
         ; ponemos colores[1] en su lugar correspondiente		{255, -128 + 4t, 0}
 
         ;Codigo no copiado. Se repite el proceso que con [colores0]
-    ;///////////////////////////////////////////////////////////////////////////////////////////////////	
+	;///////////////////////////////////////////////////////////////////////////////	
     
     
         ;ahora en XMM2 tenemos dst con los colores finales
