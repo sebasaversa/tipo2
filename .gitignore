@@ -23,6 +23,8 @@ tp*
 *.sh
 *.pdf
 *.log
+*.toc
+*.aux
 
 #Imagenes
 *.bmp
