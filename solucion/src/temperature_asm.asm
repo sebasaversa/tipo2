@@ -54,7 +54,7 @@ ALIGN 16
 pixelFinal :			DB 0x00, 0x01, 0x02, 0x04,  ; [ 0 , 1 , 2 , 4
 						DB 0x05, 0x06, 0x80, 0x80,  ;   5 , 6 , - , -
 						DB 0x80, 0x80, 0x80, 0x80,  ;   - , - , - , -
-						DB 0x80, 0x80, 0x80, 0x80   ;   - , - , - , -
+						DB 0x80, 0x80, 0x80, 0x80   ;   - , - , - , -]
 ALIGN 16
 unByte:					DB 0X00, 0x80, 0x80, 0x80   ; [ 0 , - , - , -
 						DB 0x80, 0x80, 0x80, 0x80,  ;   - , - , - , -
@@ -247,8 +247,6 @@ temp_aux:
 	PUSH R13
 
 
-	; VER COMO FUNCIONA ESTE SHUFFLE
-
 	XORPD XMM2, XMM2
 	XORPD XMM3, XMM3
 	XORPD XMM4, XMM4
@@ -330,13 +328,10 @@ temp_aux:
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
-	;XMM10 == dqword[A|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	;XMM6 ==  dqword[A|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	;PSHUFB XMM10, [shuffleCaverna]
-	;PSHUFB XMM6, [shuffleCaverna]
 	;XMM10 == qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
-	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
+	
+	;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
 	;XMM10 == dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	;XMM6 ==  dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	PACKUSWB XMM10, XMM6
@@ -386,13 +381,9 @@ temp_aux:
 	;XMM10 == XMM6 == qword[4T+128] qword[4T+128]
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
-	;XMM10 == dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
-	;XMM6 ==  dqword[0|0|0|0|A|0|0|0|0|0|0|0|0|0|0|0]
-	;PSHUFB XMM10, [shuffleCaverna2]
-	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|0|0|A|0|0|0] [0|0|0|0|0|0|0|0]}
-	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
+	;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
 	;XMM10 == dword{[R|0] [G|0] [A|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	;XMM6 ==  dword{[R|0] [G|0] [A|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	PACKUSWB XMM10, XMM6
@@ -442,13 +433,9 @@ temp_aux:
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
-	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	;PSHUFB XMM10, [shuffleCaverna2]
-	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
-	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
+	;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
 	;XMM10 == dword{[R|0] [A|0] [255|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	;XMM6 ==  dword{[R|0] [A|0] [255|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	PACKUSWB XMM10, XMM6
@@ -519,13 +506,9 @@ temp_aux:
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
-	;XMM10 == dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	;XMM6 ==  dqword[0|0|A|0|255|0|0|0|0|0|0|0|0|0|0|0]
-	;PSHUFB XMM10, [shuffleCaverna2]
-	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[0|0|A|0|255|0|0|0] [0|0|0|0|0|0|0|0]}
-	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
+	;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
 	;XMM10 == dword{[R|0] [A|0] [255|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	;XMM6 ==  dword{[R|0] [A|0] [255|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	PACKUSWB XMM10, XMM6
@@ -590,13 +573,9 @@ temp_aux:
 	XORPD XMM15, XMM15
 	PUNPCKLQDQ XMM10, XMM15
 	PUNPCKHQDQ XMM6, XMM15
-	;XMM10 == dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	;XMM6 ==  dqword[255|0|A|0|0|0|0|0|0|0|0|0|0|0|0|0]
-	;PSHUFB XMM10, [shuffleCaverna2]
-	;PSHUFB XMM6, [shuffleCaverna2]
 	;XMM10 == qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
 	;XMM6 ==  qword{[255|0|A|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
-	;Pero me hago el vivo y para empaquetar lo miro como (puedo porque con 16bits me alcanza para representar A)
+	;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits me alcanza para representar A):
 	;XMM10 == dword{[255|0] [A|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	;XMM6 ==  dword{[255|0] [A|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
 	PACKUSWB XMM10, XMM6

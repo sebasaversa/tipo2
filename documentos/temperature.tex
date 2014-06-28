@@ -38,13 +38,16 @@ void temperatura(rgb_t* p_d, unsigned int r, unsigned int g, unsigned int b)
 \end{verbatim}
 \end{codesnippet}
 \subsection{Implementaci\'on en assembler}
-En este algoritmo tenemos ciertas partes muy parecidas a \textit{popart_asm}, como la sumatoria de los elementos RGB con \verb|PSHUFB| (para luego dividir por tres y obtener el promedio).
+
+En este algoritmo tenemos ciertas partes muy parecidas a \textit{popart_asm}, como la sumatoria de los elementos RGB con \verb|PSHUFB| 
+(para luego dividir por tres y obtener el promedio).
 
 Sin embargo en este caso estas partes fueron encaradas de forma distinta. \\
-Si comparamos los 2 algoritmos que realizan \verb|PSHUFB|, el algoritmo de la funci\'on \textit{popart} trabaja de a 4 pixels y la funci\'on \textit{temp_aux} de a 2 pixels.
+Si comparamos los 2 algoritmos que realizan \verb|PSHUFB|, el algoritmo de la funci\'on \textit{popart} trabaja de a 4 pixels y la funci\'on 
+\textit{temp_aux} de a 2 pixels.
 
 Pero por ciclo, \textit{temperature_asm} procesa 5 pixeles en vez de los 4 que procesa \textit{popart_asm} por ciclo
-
+\subsubsection{tempe:}
 \begin{codesnippet}
 \begin{verbatim}
 tempe:
@@ -52,24 +55,176 @@ tempe:
     MOV RBP, RSP
         ;XMM0: R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
         ;XMM0: 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
+        ;llamare al resultado: R0|R1|R2|R3|R4|R5|R6|R7|R8|R9|R10|R11|R12|R13|R14|-
         MOVDQU XMM8, XMM0
         CALL temp_aux
         MOVDQU XMM9, XMM0
         PSHUFB XMM8, [moverPixeles]  ; XMM8: 6 |7 |8 |9 |10|11|12|13|14|15|- |- |- |- |- |-
-        PSHUFB XMM9, [moverPixeles2] ; XMM9: - |- |- |- |- |- |- |- |- |0 |1 |2 |3 |4 |5 |-
+        PSHUFB XMM9, [moverPixeles2] ; XMM9: - |- |- |- |- |- |- |- |- |R0|R1|R2|R3|R4|R5|-
         MOVDQU XMM0, XMM8	
         CALL temp_aux
         MOVDQA XMM13, XMM0
-        PSHUFB XMM13, [moverPixeles3]; xmm13: - |- |- |0 |1 |2 |3 |4 |5 |- |- |- |- | -|- |-
+        PSHUFB XMM13, [moverPixeles3]; xmm13: - |- |- |R6|R7|R8|R9|R10|R11|- |- |- |- | -|- |-
 
         PSHUFB XMM8, [moverPixeles1] ; xmm8:  12|13|14|- |- |- |- |- |- |- |- |- |- |- |- |-
         MOVDQU XMM0, XMM8
-        CALL temp_aux                ; xmm0: ??
-        PSHUFB XMM0, [unPixel]       ; xmm0:  0 |1 |2 |- |- |- |- |- |- |- |- |- |- |- |- |-
+        CALL temp_aux                ; xmm0:  R12|R13|R14|basura
+        PSHUFB XMM0, [unPixel]       ; xmm0:  R12|R13|R14|- |- |- |- |- |- |- |- |- |- |- |- |-
 
-        POR XMM0, XMM13              ; xmm0: 0 |1 |2 |03|14|25|36|47|58|9 |10|11|12|13|14|15
-        POR XMM0, XMM9               ; xmm0: 0 |1 |2 |03|14|25|36|47|58|09 |110|211|312|413|514|15
-        PSHUFB XMM0, [invertir]      ; xmm0: 09|110|211|312|413|514|03|14|25|36|47|58|0 |1 |2 | -
+        POR XMM0, XMM13              ; xmm0: R12|R13|R14|R6|R7|R8|R9|R10|R11|- |- |- |- |- |- |-
+        POR XMM0, XMM9               ; xmm0: R12|R13|R14|R6|R7|R8|R9|R10|R11|R0|R1|R2|R3|R4|R5|-
+        PSHUFB XMM0, [invertir]      ; xmm0: R0|R1|R2|R3|R4|R5|R6|R7|R8|R9|R10|R11|R12|R13|R14|-
+    POP RBP
+    RET
+\end{verbatim}
+\end{codesnippet}
+
+\subsubsection{temp_aux:}
+
+En la primer parte de \'esta funci\'on auxiliar usamos m\'ascaras para separar los colores y sumarlos entre si, dos pixeles al mismo tiempo.
+Luego armamos para dividir este valor por tres, dando el promedio.
+\begin{codesnippet}
+\begin{verbatim}
+temp_aux:
+    PUSH RBP					
+    MOV RBP, RSP
+    PUSH R12
+    PUSH R13
+    
+    XORPD XMM2, XMM2
+    XORPD XMM3, XMM3
+    XORPD XMM4, XMM4
+    
+    MOVDQA XMM7, [pixel0BGR]
+    PSHUFB XMM0, XMM7		 			; ordeno en el registro los pixels de forma 0RGB (tengo 4 pixeles)
+    MOVDQU XMM2, XMM0					; XMM2: R|0|G|0|B|0|0|0|R|0|G|0|B|0|0|0	
+    PSHUFB XMM2, [soloPrimero]			; XMM2: R|0|0|0|0|0|0|0|R|0|0|0|0|0|0|0
+    MOVDQU XMM3, XMM0					; XMM3: R|0|G|0|B|0|0|0|R|0|G|0|B|0|0|0 	
+    PSRLQ XMM3, 16						; XMM3: G|0|B|0|0|0|0|0|G|0|B|0|0|0|0|0		
+    PSHUFB XMM3, [soloPrimero]			; XMM3: G|0|0|0|0|0|0|0|G|0|0|0|0|0|0|0
+    MOVDQU XMM4, XMM0					; XMM4: R|0|G|0|B|0|0|0|R|0|G|0|B|0|0|0 	
+    PSRLQ XMM4, 32						; XMM4: B|0|0|0|0|0|0|0|B|0|0|0|0|0|0|0
+        ; Ahora podemos hacer suma
+    PADDQ XMM2, XMM3
+    PADDQ XMM2, XMM4					; XMM2: qword[R+G+B] qword[R+G+B] 
+    XORPD XMM5, XMM5
+        ; suma / 3
+    MOV R12, 3
+    MOV R13, 1
+    XORPD XMM0, XMM0
+    XORPD XMM1, XMM1
+    CVTSI2SS XMM0, R12
+    CVTSI2SS XMM1, R13
+        ; PARA EXTENDER EL 3 A LOS PACKS DEL XMM5
+    XORPD XMM5, XMM5
+    ADDSS XMM5, XMM1
+    PSLLDQ XMM5, 4
+    ADDSS XMM5, XMM0
+    PSLLDQ XMM5, 4
+    ADDSS XMM5, XMM1
+    PSLLDQ XMM5, 4
+    ADDSS XMM5, XMM0
+    CVTDQ2PS XMM2, XMM2
+    DIVPS XMM2, XMM5					; XMM2: prom (float)
+    CVTTPS2DQ XMM2, XMM2
+    CVTDQ2PS XMM2, XMM2
+    MOVDQU XMM12, XMM2					; XMM12: prom (float)
+    CVTTPS2DQ XMM12, XMM12
+        ;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
+\end{verbatim}
+\end{codesnippet}
+
+En esta segunda parte se elije mediante m\'ascaras qu\'e pixel ser\'a devuelto. 
+\begin{codesnippet}
+\begin{verbatim}
+    XORPD XMM0, XMM0
+        ; ponemos colores[0] en su lugar correspondiente	{128 + 4t, 0, 0}
+    
+    MOVDQU XMM10, [colores0] 			; XMM10: qword[128(+4T)] qword[128(+4T)] 
+    
+        ;XMM10: colores[0] nos falta agregar 4T
+        ;XMM2: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
+    MOVDQU XMM6, XMM2
+        ;XMM6: [T|0|0|0|0|0|0|0] [T|0|0|0|0|0|0|0]
+    
+        ;PARA MULTIPLICAR POR 4
+    MOV R12, 4
+    XORPD XMM14, XMM14
+    MOVQ XMM14, R12
+    XORPD XMM5, XMM5
+    PADDQ XMM5, XMM14
+    PSLLDQ XMM5, 8
+    PADDQ XMM5, XMM14
+    
+    CVTDQ2PS XMM5, XMM5
+    MULPS XMM6, XMM5	; XMM6: qword[4T|0|0|0|0|0|0|0] qword[4T|0|0|0|0|0|0|0]
+    
+    CVTTPS2DQ XMM6, XMM6
+    
+        ; A: 4T + 128
+        ; XMM6: 	qword[4T|0|0|0|0|0|0|0] 		qword[4T|0|0|0|0|0|0|0]
+        ; XMM10: 	qword[128(+4T)|0|0|0|0|0|0|0] 	qword[128(+4T)|0|0|0|0|0|0|0]
+    PADDUSW XMM10, XMM6
+    MOVDQU XMM6, XMM10
+        ;XMM10 == XMM6 == qword[4T+128] qword[4T+128]
+    XORPD XMM15, XMM15
+    PUNPCKLQDQ XMM10, XMM15
+    PUNPCKHQDQ XMM6, XMM15
+        ;XMM10 == qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
+        ;XMM6 ==  qword{[A|0|0|0|0|0|0|0] [0|0|0|0|0|0|0|0]}
+        ;Lo voy a mirar de otra forma para empaquetar (puedo porque con 16bits 
+		                                       ;me alcanza para representar A):
+        ;XMM10 == dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
+        ;XMM6 ==  dword{[A|0] [G|0] [B|0] [0|0] [0|0] [0|0] [0|0] [0|0]}
+    PACKUSWB XMM10, XMM6
+        ;XMM10 == dword{[AGB0][0000][AGB0][0000]}
+        ;empaquete saturando word a byte para reducir el tamanio de A de 2 bytes a 1 byte
+    PSHUFB XMM10, [shuffleCaverna2]
+        ;XMM10 == dword{[AGB0][AGB0][0000][0000]}
+    
+    MOVDQU XMM1, [tresDos] 
+    PCMPGTD XMM1, XMM12	
+    PSHUFB XMM1, [shuffleCaverna2]
+    PAND XMM1 , XMM10 					; estos pixeles le ponemos colores[0]
+    XORPD XMM0, XMM0
+    POR XMM0, XMM1						; ponemos colores0 en donde va en dst
+	;///////////////////////////////////////////////////////////////////////////////
+
+        ; ponemos colores[4] en su lugar correspondiente	{  0, 0, 1151 -4t}
+
+        ;Codigo no copiado. Se repite el proceso que con [colores0]
+
+\end{verbatim}
+\end{codesnippet}
+
+\begin{codesnippet}
+\begin{verbatim}
+	;///////////////////////////////////////////////////////////////////////////////
+
+        ; ponemos colores[3] en su lugar correspondiente     {0, 895 - 4t, 255}
+
+        ;Codigo no copiado. Se repite el proceso que con [colores0]
+	;//////////////////////////////////////////////////////////////////////////////
+        ; ponemos colores[2] en su lugar correspondiente		{639 -4t, 255, -384 + 4t},	
+
+        ;Codigo no copiado. Se repite el proceso que con [colores0]
+	;///////////////////////////////////////////////////////////////////////////////
+
+        ; ponemos colores[1] en su lugar correspondiente		{255, -128 + 4t, 0}
+
+        ;Codigo no copiado. Se repite el proceso que con [colores0]
+	;///////////////////////////////////////////////////////////////////////////////	
+    
+    
+        ;ahora en XMM2 tenemos dst con los colores finales
+        ;sacamos los ceros para que queden pixeles de 3 bytes
+        
+        
+    MOVDQU XMM10, [pixelFinal] ; [ 0 , 1 , 2 , 4, 5 , 6 , - , -, - , - , - , -, - , - , - , -]
+    PSHUFB XMM0, XMM10
+    
+    POP R13
+    POP R12
     POP RBP
     RET
 \end{verbatim}
