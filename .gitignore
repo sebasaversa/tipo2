@@ -21,6 +21,8 @@
 *.app
 tp*
 *.sh
+*.pdf
+*.log
 
 #Imagenes
 *.bmp
