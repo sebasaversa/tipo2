@@ -1,0 +1,237 @@
+\subsubsection{Desensamblado de tiles.o:}
+objdump -M intel -d tiles_c.o
+
+tiles_c.o:     formato del fichero elf64-x86-64
+
+Desensamblado de la sección .text:
+
+\begin{codesnippet}
+\begin{verbatim}
+       push   rbp
+       mov    rbp,rsp
+       push   r13
+       push   r12
+       mov    QWORD PTR [rbp-0x58],rdi
+       mov    QWORD PTR [rbp-0x60],rsi
+       mov    DWORD PTR [rbp-0x64],edx
+       mov    DWORD PTR [rbp-0x68],ecx
+       mov    DWORD PTR [rbp-0x6c],r8d
+       mov    DWORD PTR [rbp-0x70],r9d
+       mov    ecx,DWORD PTR [rbp-0x6c]
+       movsxd rax,ecx
+       sub    rax,0x1
+       mov    QWORD PTR [rbp-0x40],rax
+       movsxd rax,ecx
+       mov    r12,rax
+       mov    r13d,0x0
+       mov    rax,QWORD PTR [rbp-0x58]
+       mov    QWORD PTR [rbp-0x38],rax
+       mov    esi,DWORD PTR [rbp-0x70]
+       movsxd rax,esi
+       sub    rax,0x1
+       mov    QWORD PTR [rbp-0x30],rax
+       movsxd rax,esi
+       mov    r10,rax
+       mov    r11d,0x0
+       mov    rax,QWORD PTR [rbp-0x60]
+       mov    QWORD PTR [rbp-0x28],rax
+       mov    DWORD PTR [rbp-0x48],0x0
+       jmp    119 <tiles_c+0x119>
+ 6e    mov    DWORD PTR [rbp-0x44],0x0
+       jmp    109 <tiles_c+0x109>
+ 7a    mov    eax,DWORD PTR [rbp-0x48]
+       movsxd rdx,eax
+       movsxd rax,esi
+       imul   rdx,rax
+       mov    rax,QWORD PTR [rbp-0x28]
+       lea    rdi,[rdx+rax*1]
+       mov    edx,DWORD PTR [rbp-0x44]
+       mov    eax,edx
+       add    eax,eax
+       add    eax,edx
+       cdqe   
+       add    rax,rdi
+       mov    QWORD PTR [rbp-0x20],rax
+       mov    eax,DWORD PTR [rbp-0x48]
+       cdq    
+       idiv   DWORD PTR [rbp+0x18]
+       mov    eax,DWORD PTR [rbp+0x28]
+       add    eax,edx
+       movsxd rdx,eax
+       movsxd rax,ecx
+       imul   rdx,rax
+       mov    rax,QWORD PTR [rbp-0x38]
+       lea    r8,[rdx+rax*1]
+       mov    edx,DWORD PTR [rbp-0x44]
+       mov    eax,edx
+       add    eax,eax
+       lea    edi,[rax+rdx*1]
+       mov    edx,DWORD PTR [rbp+0x10]
+\end{verbatim}
+\end{codesnippet}
+\begin{codesnippet}
+\begin{verbatim}
+       mov    eax,edx
+       add    eax,eax
+       lea    r9d,[rax+rdx*1]
+       mov    eax,edi
+       cdq    
+       idiv   r9d
+       mov    edi,edx
+       mov    edx,DWORD PTR [rbp+0x20]
+       mov    eax,edx
+       add    eax,eax
+       add    eax,edx
+       add    eax,edi
+       cdqe   
+       add    rax,r8
+       mov    QWORD PTR [rbp-0x18],rax
+       mov    rax,QWORD PTR [rbp-0x20]
+       mov    rdx,QWORD PTR [rbp-0x18]
+       movzx  edi,WORD PTR [rdx]
+       mov    WORD PTR [rax],di
+       movzx  edx,BYTE PTR [rdx+0x2]
+       mov    BYTE PTR [rax+0x2],dl
+       add    DWORD PTR [rbp-0x44],0x1
+109    mov    eax,DWORD PTR [rbp-0x44]
+       cmp    eax,DWORD PTR [rbp-0x64]
+       jl     7a <tiles_c+0x7a>
+       add    DWORD PTR [rbp-0x48],0x1
+119    mov    eax,DWORD PTR [rbp-0x48]
+       cmp    eax,DWORD PTR [rbp-0x68]
+       jl     6e <tiles_c+0x6e>
+       pop    r12
+       pop    r13
+       pop    rbp
+       ret   
+\end{verbatim}
+\end{codesnippet}
+\begin{codesnippet}
+\begin{verbatim}
+tiles_asm:
+	PUSH RBP	
+	MOV RBP, RSP
+	XOR R10, R10
+	MOV R10D, [RBP+32] ; coloco offsetX
+	XOR R11, R11
+	.muevoX:
+	CMP R11, R10
+	JE .bajoY
+	LEA RDI, [RDI+3] ;muevo 3 bytes el puntero de la matriz src
+	INC R11
+	JMP .muevoX
+	.bajoY:
+	XOR R10, R10
+	MOV R10D, [RBP+40] ;coloco offsetY
+	XOR R11, R11
+	.bajoY2:
+	CMP R11, R10
+	JE .inicio
+	LEA RDI, [RDI+R8] ;aumento en row size bytes el puntero ( bajo una fila)
+	INC R11
+	JMP .bajoY2
+	.inicio:
+	MOV R13, RDI
+	XOR R11, R11
+	XOR R12, R12
+	LEA R13, [RDI]
+	LEA R12, [RDI]
+	XOR R14, R14	; R14: i
+	.for1:
+		CMP R14, RCX
+		JGE .endfor1
+		XOR R10, R10
+		XOR R15, R15	;R15: j
+		MOV RAX, RDI
+		.for2:
+			CMP R15, RDX
+			JGE .endfor2
+			CMP R10D, [RBP+16]
+			JB .mePaseTile
+			XOR R10, R10
+			LEA RDI, [R13]
+			JMP .for2
+			.mePaseTile:
+			MOV R11, R10
+			ADD R11, 6
+			CMP R11D, [RBP+16]
+			JBE .sigo
+			INC R10
+			INC R15
+			LEA RDI, [RDI - 13]
+			LEA RSI, [RSI - 13]
+			MOVDQU XMM0, [RDI]
+\end{verbatim}
+\end{codesnippet}
+\begin{codesnippet}
+\begin{verbatim}
+			MOVDQU [RSI], XMM0
+			LEA RDI, [RDI + 16]
+			LEA RSI, [RSI + 16]
+			JMP .for2
+			.sigo:
+			MOV R11, R15
+			ADD R11, 6
+			CMP R11, RDX
+			JBE .sigo2
+			INC R10
+			INC R15
+			;LEA RDI, [RDI - 13]
+			LEA RSI, [RSI - 13]
+			MOVDQU XMM0, [RDI]
+			MOVDQU XMM1, [RSI] ;ME GUARDO LOS ANTERIORES 13 BYTES DE RSI
+			PSLLDQ XMM1, 3
+			PSRLDQ XMM1, 3
+			PSLLDQ XMM0, 13
+			PADDB XMM0, XMM1
+			MOVDQU [RSI], XMM0s
+			LEA RDI, [RDI + 3]
+			LEA RSI, [RSI + 16]
+			JMP .for2
+			.sigo2:
+			MOVDQU XMM0, [RDI]
+			MOVDQU [RSI], XMM0
+			ADD R10, 5
+			ADD R15, 5
+			LEA RDI, [RDI + 15]
+			LEA RSI, [RSI + 15]
+			JMP .for2
+			.endfor2:
+			INC R14
+			XOR RAX, RAX
+			XOR R15, R15
+			MOV EAX, [RBP + 24] ;TAM Y
+			MOV R15, R14 ; FILAS QUE RECORRI
+			.cicloDiv:
+			CMP R15, RAX
+			JB .muevoRecuadro
+			JE .inicioTiles
+			SUB R15, RAX
+			CMP R15, RAX
+			JG .cicloDiv
+			JB .muevoRecuadro
+			.inicioTiles:
+			LEA RDI, [R12]
+			LEA R13, [RDI]
+			JMP .muevoDST
+			.muevoRecuadro:
+			LEA RDI, [R13 + R8]
+			LEA R13, [RDI]
+\end{verbatim}
+\end{codesnippet}
+\begin{codesnippet}
+\begin{verbatim}
+			.muevoDST:
+			MOV R15, RDX
+			MOV RAX, RDX
+			ADD RAX, RAX
+			ADD R15, RAX
+			MOV RAX, R9
+			SUB RAX, R15
+			LEA RSI, [RSI + RAX]
+			JMP .for1
+	.endfor1:
+	POP RBP
+	RET
+\end{verbatim}
+\end{codesnippet}
