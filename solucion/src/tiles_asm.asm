@@ -1,15 +1,5 @@
 global tiles_asm
 
-%define modulo(x,y) mod x,y
-
-%macro mod 2
-mov rax, %1
-mov rbx, %2
-xor rdx, rdx
-div rbx
-; rdx = %1 mod %2
-%endmacro
-
 section .data
 
 section .text
@@ -41,10 +31,10 @@ tiles_asm:
 
 	PUSH RBP	
 	MOV RBP, RSP
-	;PUSH R12
-	;PUSH R13
-	;PUSH R14
-	;PUSH R15
+	PUSH R12
+	PUSH R13
+	PUSH R14
+	PUSH R15
 
 	;///////////// PARA POSICIONARME EN OFFSET X //////////////////
 	XOR R10, R10
@@ -104,15 +94,8 @@ tiles_asm:
 			;rgb_t *p_s = (rgb_t*)&src_matrix[(i % tamy) + offsety][((j*3) % (tamx*3)) + (offsetx*3)];
 			;*p_d = *p_s;}}}
 			
-			
-			
-			
-			
-			
 			;MOVDQU XMM0, [RDI]
 			;MOVDQU [RSI], XMM0
-			
-			
 			
 			CMP R10D, [RBP+16]
 			JB .mePaseTile
@@ -210,9 +193,9 @@ tiles_asm:
 
 	.endfor1:
 		
-	;POP R15
-	;POP R14
-	;POP R13
-	;POP R12
+	POP R15
+	POP R14
+	POP R13
+	POP R12
 	POP RBP
 	RET

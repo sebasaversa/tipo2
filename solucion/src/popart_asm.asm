@@ -75,7 +75,9 @@ popart_asm:
 	PUSH R13
 	PUSH R14
 	PUSH R15
-	
+	PUSH RBX
+	SUB RSP, 8
+
     ;for (int i = 0; i < filas; i++) {
 	MOV RAX, RDI
 	MOV RBX, RSI
@@ -130,6 +132,8 @@ popart_asm:
 				JMP .for1
 		
 		.endfor1:
+	ADD RSP, 8
+	POP RBX
 	POP R15
 	POP R14
  	POP R13
