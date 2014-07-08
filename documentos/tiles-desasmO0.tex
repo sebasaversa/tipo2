@@ -11,13 +11,16 @@ Desensamblado de la sección .text:
        mov    rbp,rsp
        push   r13
        push   r12
-       mov    QWORD PTR [rbp-0x58],rdi
-       mov    QWORD PTR [rbp-0x60],rsi
+       mov    QWORD PTR [rbp-0x58],rdi	;en este caso PTR no hace diferencia. Es lo mismo a hacer mov QWORD [rbp-0x58], rdi
+       mov    QWORD PTR [rbp-0x60],rsi	;sabemos que estos mov los hace de más
        mov    DWORD PTR [rbp-0x64],edx
        mov    DWORD PTR [rbp-0x68],ecx
        mov    DWORD PTR [rbp-0x6c],r8d
        mov    DWORD PTR [rbp-0x70],r9d
-       mov    ecx,DWORD PTR [rbp-0x6c]
+       mov    ecx,DWORD PTR [rbp-0x6c]	;mov ecx, r8d
+       
+		;hay q encontrar los 2 for
+       
        movsxd rax,ecx
        sub    rax,0x1
        mov    QWORD PTR [rbp-0x40],rax

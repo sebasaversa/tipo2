@@ -1,0 +1,76 @@
+\subsubsection{Desensamblado de tiles.o:}
+objdump -M intel -d tiles_c.o
+
+tiles_c.o:     formato del fichero elf64-x86-64
+
+Desensamblado de la sección .text:
+
+\begin{codesnippet}
+\begin{verbatim}
+0000000000000000 <tiles_c>:
+       push   r15
+       push   r14
+       push   r13
+       push   r12
+       push   rbp
+       push   rbx
+       mov    r13d,edx
+       mov    edx,DWORD PTR [rsp+0x38]
+       mov    eax,DWORD PTR [rsp+0x48]
+       test   ecx,ecx
+       jle    9e <tiles_c+0x9e>
+       lea    ebx,[rdx+rdx*2]
+       lea    ebp,[rax+rax*2]
+       movsxd r15,r9d
+       mov    r14,rsi
+       lea    esi,[r13+r13*2+0x0]
+       mov    r12d,0x0
+       movsxd rax,r8d
+       mov    QWORD PTR [rsp-0x8],rax
+       jmp    76 <tiles_c+0x76>
+    
+3e:    movsxd r9,r8d
+    
+       mov    eax,r8d
+       cdq    
+       idiv   ebx
+       add    edx,ebp
+       movsxd rdx,edx
+       movzx  eax,WORD PTR [r10+rdx*1]
+       mov    WORD PTR [r11+r9*1],ax
+       movzx  eax,BYTE PTR [r10+rdx*1+0x2]
+       mov    BYTE PTR [r11+r9*1+0x2],al
+       add    r8d,0x3
+       cmp    r8d,esi
+       jne    3e <tiles_c+0x3e>
+    
+6a:    add    r12d,0x1
+    
+       add    r14,r15
+       cmp    r12d,ecx
+       je     9e <tiles_c+0x9e>
+    
+76:    test   r13d,r13d
+
+       jle    6a <tiles_c+0x6a>
+       mov    r11,r14
+       mov    eax,r12d
+       cdq    
+       idiv   DWORD PTR [rsp+0x40]
+       add    edx,DWORD PTR [rsp+0x50]
+       movsxd r10,edx
+       imul   r10,QWORD PTR [rsp-0x8]
+       add    r10,rdi
+       mov    r8d,0x0
+       jmp    3e <tiles_c+0x3e>
+       
+9e:    pop    rbx
+  
+       pop    rbp
+       pop    r12
+       pop    r13
+       pop    r14
+       pop    r15
+       ret    
+\end{verbatim}
+\end{codesnippet}
