@@ -113,6 +113,8 @@ temperature_asm:
 	PUSH R13
 	PUSH R14
 	PUSH R15
+	PUSH RBX
+	SUB RSP, 8
 
     ;for (int i = 0; i < filas; i++) {
 	MOV RAX, RDI
@@ -192,6 +194,9 @@ temperature_asm:
 				JMP .for1
 
 		.endfor1:
+	
+	ADD RSP, 8
+	POP RBX
 	POP R15
 	POP R14
  	POP R13
@@ -204,7 +209,10 @@ tempe:
 
 	PUSH RBP
 	MOV RBP, RSP
-		
+	push R12
+	push R13
+	push r14
+	push r15		
 		;XMM0: R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R coloco los primeros 16bytes de la imagen en XMM1
 		;XMM0: 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
 		MOVDQU XMM8, XMM0
@@ -225,6 +233,10 @@ tempe:
 		POR XMM0, XMM13					; xmm0: 0 |1 |2 |03|14|25|36|47|58|9 |10|11|12|13|14|15
 		POR XMM0, XMM9					; xmm0: 0 |1 |2 |03|14|25|36|47|58|09 |110|211|312|413|514|15
 		PSHUFB XMM0, [invertir]			; xmm0: 09|110|211|312|413|514|03|14|25|36|47|58|0 |1 |2 | -
+	POP R15
+	POP R14
+ 	POP R13
+ 	POP R12
 	POP RBP
 	RET
 	
@@ -245,7 +257,8 @@ temp_aux:
 	MOV RBP, RSP
 	PUSH R12
 	PUSH R13
-
+	push R14
+	push R15
 
 	XORPD XMM2, XMM2
 	XORPD XMM3, XMM3
@@ -601,6 +614,8 @@ temp_aux:
 	MOVDQU XMM10, [pixelFinal]
 	PSHUFB XMM0, XMM10
 
+	pop r15
+	pop r14
 	POP R13
 	POP R12
 	POP RBP

@@ -76,15 +76,17 @@ ldr_asm:
 	PUSH R13
 	PUSH R14
 	PUSH R15
+	PUSH RBX
+	SUB RSP, 8
 
     ;for (int i = 0; i < filas; i++) {
 
 	LEA RBX, [RDI]
 	LEA R15, [RDI]
-	LEA R13, [RSI]
 	LEA R14, [RDI]
+	LEA R13, [RSI]
 	XOR R9, R9
-	MOV R9D, [RSP + 48]
+	MOV R9D, [RSP + 64]
 	XOR R10, R10	; R10: i
 	.for1:
 
@@ -271,6 +273,8 @@ ldr_asm:
 				JMP .for1
 
 		.endfor1:
+			ADD RSP, 8
+			POP RBX
 			POP R15
 			POP R14
 			POP R13
@@ -416,6 +420,10 @@ sumaFilas:
 minMax:
 	PUSH RBP
 	MOV RBP, RSP
+	push r12
+	push r13
+	push R14
+	push R15
 
 		MOVDQU XMM5, XMM0		; XMM5 = [sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB|sumaRGB] 
 		XORPD XMM14, XMM14
@@ -503,6 +511,9 @@ minMax:
 ;				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
 ;				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
 		;*p_d = colores[s];}}}	
-
+	pop R15
+	pop R14
+	pop R13
+	pop r12
 	POP RBP
 	RET
