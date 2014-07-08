@@ -3,81 +3,46 @@ Procesando...
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29642
-  # de ciclos insumidos por llamada : 29.642
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291838
-  # de ciclos insumidos por llamada : 29.184
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2966814
   # de ciclos insumidos por llamada : 29.668
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29426
-  # de ciclos insumidos por llamada : 29.426
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290772
-  # de ciclos insumidos por llamada : 29.077
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2896826
   # de ciclos insumidos por llamada : 28.968
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29660
-  # de ciclos insumidos por llamada : 29.660
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291030
-  # de ciclos insumidos por llamada : 29.103
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2900370
   # de ciclos insumidos por llamada : 29.004
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29440
-  # de ciclos insumidos por llamada : 29.440
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290870
-  # de ciclos insumidos por llamada : 29.087
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2896662
   # de ciclos insumidos por llamada : 28.967
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29660
-  # de ciclos insumidos por llamada : 29.660
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291418
-  # de ciclos insumidos por llamada : 29.142
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2965034
   # de ciclos insumidos por llamada : 29.650
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
@@ -478,86 +443,52 @@ Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2902594
   # de ciclos insumidos por llamada : 29.026
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24854
-  # de ciclos insumidos por llamada : 24.854
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 243232
-  # de ciclos insumidos por llamada : 24.323
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2396738
   # de ciclos insumidos por llamada : 23.967
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24614
-  # de ciclos insumidos por llamada : 24.614
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239736
-  # de ciclos insumidos por llamada : 23.974
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2402524
   # de ciclos insumidos por llamada : 24.025
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26498
-  # de ciclos insumidos por llamada : 26.498
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 246808
-  # de ciclos insumidos por llamada : 24.681
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2483134
   # de ciclos insumidos por llamada : 24.831
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25506
-  # de ciclos insumidos por llamada : 25.506
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 246458
-  # de ciclos insumidos por llamada : 24.646
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2510100
   # de ciclos insumidos por llamada : 25.101
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24578
-  # de ciclos insumidos por llamada : 24.578
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239578
-  # de ciclos insumidos por llamada : 23.958
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2396712
   # de ciclos insumidos por llamada : 23.967
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
