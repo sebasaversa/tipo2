@@ -3,113 +3,64 @@ Procesando...
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29848
-  # de ciclos insumidos por llamada : 29.848
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291252
-  # de ciclos insumidos por llamada : 29.125
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2903112
   # de ciclos insumidos por llamada : 29.031
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29952
-  # de ciclos insumidos por llamada : 29.952
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 292924
-  # de ciclos insumidos por llamada : 29.292
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2949990
   # de ciclos insumidos por llamada : 29.500
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29572
-  # de ciclos insumidos por llamada : 29.572
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291282
-  # de ciclos insumidos por llamada : 29.128
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2902062
   # de ciclos insumidos por llamada : 29.021
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 30798
-  # de ciclos insumidos por llamada : 30.798
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 301090
-  # de ciclos insumidos por llamada : 30.109
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3007828
   # de ciclos insumidos por llamada : 30.078
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29876
-  # de ciclos insumidos por llamada : 29.876
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291306
-  # de ciclos insumidos por llamada : 29.131
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3171608
   # de ciclos insumidos por llamada : 31.716
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 30068
-  # de ciclos insumidos por llamada : 30.068
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291234
-  # de ciclos insumidos por llamada : 29.123
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2903208
   # de ciclos insumidos por llamada : 29.032
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29766
-  # de ciclos insumidos por llamada : 29.766
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291260
-  # de ciclos insumidos por llamada : 29.126
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2903148
   # de ciclos insumidos por llamada : 29.031
+  
 Procesando...
   Filtro             : temperature
   Implementación     : C

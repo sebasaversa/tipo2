@@ -48,401 +48,226 @@ Procesando...
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29544
-  # de ciclos insumidos por llamada : 29.544
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291648
-  # de ciclos insumidos por llamada : 29.165
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3001342
   # de ciclos insumidos por llamada : 30.013
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29412
-  # de ciclos insumidos por llamada : 29.412
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291132
-  # de ciclos insumidos por llamada : 29.113
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3005606
   # de ciclos insumidos por llamada : 30.056
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 30124
-  # de ciclos insumidos por llamada : 30.124
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290920
-  # de ciclos insumidos por llamada : 29.092
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2914092
   # de ciclos insumidos por llamada : 29.141
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29514
-  # de ciclos insumidos por llamada : 29.514
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290732
-  # de ciclos insumidos por llamada : 29.073
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2909408
   # de ciclos insumidos por llamada : 29.094
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29690
-  # de ciclos insumidos por llamada : 29.690
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290820
-  # de ciclos insumidos por llamada : 29.082
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3026362
   # de ciclos insumidos por llamada : 30.264
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 30584
-  # de ciclos insumidos por llamada : 30.584
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 299494
-  # de ciclos insumidos por llamada : 29.949
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2997280
   # de ciclos insumidos por llamada : 29.973
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29680
-  # de ciclos insumidos por llamada : 29.680
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291488
-  # de ciclos insumidos por llamada : 29.149
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2911094
   # de ciclos insumidos por llamada : 29.111
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29808
-  # de ciclos insumidos por llamada : 29.808
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290502
-  # de ciclos insumidos por llamada : 29.050
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2968216
   # de ciclos insumidos por llamada : 29.682
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 31662
-  # de ciclos insumidos por llamada : 31.662
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 309729
-  # de ciclos insumidos por llamada : 30.973
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3101925
   # de ciclos insumidos por llamada : 31.019
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : lena.1023x767.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29656
-  # de ciclos insumidos por llamada : 29.656
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290770
-  # de ciclos insumidos por llamada : 29.077
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2913988
   # de ciclos insumidos por llamada : 29.140
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 30284
-  # de ciclos insumidos por llamada : 30.284
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290544
-  # de ciclos insumidos por llamada : 29.054
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2913982
   # de ciclos insumidos por llamada : 29.140
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29770
-  # de ciclos insumidos por llamada : 29.770
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291708
-  # de ciclos insumidos por llamada : 29.171
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2945896
   # de ciclos insumidos por llamada : 29.459
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29586
-  # de ciclos insumidos por llamada : 29.586
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290964
-  # de ciclos insumidos por llamada : 29.096
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3101504
   # de ciclos insumidos por llamada : 31.015
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29668
-  # de ciclos insumidos por llamada : 29.668
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290400
-  # de ciclos insumidos por llamada : 29.040
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3020260
   # de ciclos insumidos por llamada : 30.203
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 44640
-  # de ciclos insumidos por llamada : 44.640
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 334752
-  # de ciclos insumidos por llamada : 33.475
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2948398
   # de ciclos insumidos por llamada : 29.484
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29648
-  # de ciclos insumidos por llamada : 29.648
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290444
-  # de ciclos insumidos por llamada : 29.044
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2914176
   # de ciclos insumidos por llamada : 29.142
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29656
-  # de ciclos insumidos por llamada : 29.656
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290824
-  # de ciclos insumidos por llamada : 29.082
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2914168
   # de ciclos insumidos por llamada : 29.142
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29664
-  # de ciclos insumidos por llamada : 29.664
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291580
-  # de ciclos insumidos por llamada : 29.158
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3030900
   # de ciclos insumidos por llamada : 30.309
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 31521
-  # de ciclos insumidos por llamada : 31.521
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 308472
-  # de ciclos insumidos por llamada : 30.847
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3108942
   # de ciclos insumidos por llamada : 31.089
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29670
-  # de ciclos insumidos por llamada : 29.670
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291220
-  # de ciclos insumidos por llamada : 29.122
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2909728
   # de ciclos insumidos por llamada : 29.097
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29938
-  # de ciclos insumidos por llamada : 29.938
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291354
-  # de ciclos insumidos por llamada : 29.135
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2950232
   # de ciclos insumidos por llamada : 29.502
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29608
-  # de ciclos insumidos por llamada : 29.608
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290306
-  # de ciclos insumidos por llamada : 29.031
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3007152
   # de ciclos insumidos por llamada : 30.072
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29550
-  # de ciclos insumidos por llamada : 29.550
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290726
-  # de ciclos insumidos por llamada : 29.073
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2904722
   # de ciclos insumidos por llamada : 29.047
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29696
-  # de ciclos insumidos por llamada : 29.696
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 290824
-  # de ciclos insumidos por llamada : 29.082
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 3007152
   # de ciclos insumidos por llamada : 30.072
+  
 Procesando...
   Filtro             : ldr
   Implementación     : C
   Archivo de entrada : marilyn.1023x767.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 29718
-  # de ciclos insumidos por llamada : 29.718
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 291498
-  # de ciclos insumidos por llamada : 29.150
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2902594
   # de ciclos insumidos por llamada : 29.026
+  
   
 Procesando...
   Filtro             : ldr
@@ -494,397 +319,221 @@ Procesando...
   Implementación     : ASM
   Archivo de entrada : lena.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25968
-  # de ciclos insumidos por llamada : 25.968
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 247006
-  # de ciclos insumidos por llamada : 24.701
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2467250
   # de ciclos insumidos por llamada : 24.673
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25058
-  # de ciclos insumidos por llamada : 25.058
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239698
-  # de ciclos insumidos por llamada : 23.970
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2394394
   # de ciclos insumidos por llamada : 23.944
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25232
-  # de ciclos insumidos por llamada : 25.232
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239684
-  # de ciclos insumidos por llamada : 23.968
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2601612
   # de ciclos insumidos por llamada : 26.016
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25002
-  # de ciclos insumidos por llamada : 25.002
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239706
-  # de ciclos insumidos por llamada : 23.971
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2452617
   # de ciclos insumidos por llamada : 24.526
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26226
-  # de ciclos insumidos por llamada : 26.226
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 274048
-  # de ciclos insumidos por llamada : 27.405
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2490678
   # de ciclos insumidos por llamada : 24.907
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25432
-  # de ciclos insumidos por llamada : 25.432
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239508
-  # de ciclos insumidos por llamada : 23.951
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2441734
   # de ciclos insumidos por llamada : 24.417
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25474
-  # de ciclos insumidos por llamada : 25.474
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 246442
-  # de ciclos insumidos por llamada : 24.644
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2488438
   # de ciclos insumidos por llamada : 24.884
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24714
-  # de ciclos insumidos por llamada : 24.714
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239196
-  # de ciclos insumidos por llamada : 23.920
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2519568
   # de ciclos insumidos por llamada : 25.196
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24554
-  # de ciclos insumidos por llamada : 24.554
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239656
-  # de ciclos insumidos por llamada : 23.966
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2449146
   # de ciclos insumidos por llamada : 24.491
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : lena.1023x767.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24696
-  # de ciclos insumidos por llamada : 24.696
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239748
-  # de ciclos insumidos por llamada : 23.975
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2426066
   # de ciclos insumidos por llamada : 24.261
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24766
-  # de ciclos insumidos por llamada : 24.766
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239628
-  # de ciclos insumidos por llamada : 23.963
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2548720
   # de ciclos insumidos por llamada : 25.487
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25714
-  # de ciclos insumidos por llamada : 25.714
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239444
-  # de ciclos insumidos por llamada : 23.944
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2394082
   # de ciclos insumidos por llamada : 23.941
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26001
-  # de ciclos insumidos por llamada : 26.001
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254112
-  # de ciclos insumidos por llamada : 25.411
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2586189
   # de ciclos insumidos por llamada : 25.862
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.203x203.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26688
-  # de ciclos insumidos por llamada : 26.688
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 256515
-  # de ciclos insumidos por llamada : 25.652
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2556837
   # de ciclos insumidos por llamada : 25.568
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.203x203.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26370
-  # de ciclos insumidos por llamada : 26.370
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254679
-  # de ciclos insumidos por llamada : 25.468
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2592090
   # de ciclos insumidos por llamada : 25.921
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26703
-  # de ciclos insumidos por llamada : 26.703
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254157
-  # de ciclos insumidos por llamada : 25.416
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2592795
   # de ciclos insumidos por llamada : 25.928
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24720
-  # de ciclos insumidos por llamada : 24.720
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239682
-  # de ciclos insumidos por llamada : 23.968
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2394418
   # de ciclos insumidos por llamada : 23.944
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24980
-  # de ciclos insumidos por llamada : 24.980
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239740
-  # de ciclos insumidos por llamada : 23.974
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2394384
   # de ciclos insumidos por llamada : 23.944
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.512x512.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 24754
-  # de ciclos insumidos por llamada : 24.754
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 239734
-  # de ciclos insumidos por llamada : 23.973
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2503654
   # de ciclos insumidos por llamada : 25.037
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.512x512.bmp
 Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26934
-  # de ciclos insumidos por llamada : 26.934
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 253902
-  # de ciclos insumidos por llamada : 25.390
-Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2537067
   # de ciclos insumidos por llamada : 25.371
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 25546
-  # de ciclos insumidos por llamada : 25.546
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 246488
-  # de ciclos insumidos por llamada : 24.649
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2494490
   # de ciclos insumidos por llamada : 24.945
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26589
-  # de ciclos insumidos por llamada : 26.589
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254562
-  # de ciclos insumidos por llamada : 25.456
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2594508
   # de ciclos insumidos por llamada : 25.945
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26118
-  # de ciclos insumidos por llamada : 26.118
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254538
-  # de ciclos insumidos por llamada : 25.454
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2591871
   # de ciclos insumidos por llamada : 25.919
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 26481
-  # de ciclos insumidos por llamada : 26.481
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254211
-  # de ciclos insumidos por llamada : 25.421
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2584083
   # de ciclos insumidos por llamada : 25.841
+  
 Procesando...
   Filtro             : ldr
   Implementación     : ASM
   Archivo de entrada : marilyn.1023x767.bmp
-Tiempo de ejecución:
-  # iteraciones                     : 1000
-  # de ciclos insumidos totales     : 27210
-  # de ciclos insumidos por llamada : 27.210
-Tiempo de ejecución:
-  # iteraciones                     : 10000
-  # de ciclos insumidos totales     : 254703
-  # de ciclos insumidos por llamada : 25.470
 Tiempo de ejecución:
   # iteraciones                     : 100000
   # de ciclos insumidos totales     : 2530064
