@@ -12,20 +12,37 @@
   Realizar gráficos que representen estas diferencias.
   
 \subsection{An\'alisis previo}
-\'Este filtro 
+\'Este filtro recorre todos los elementos de la im\'agen fuente, copia un marco de 2 filas y 2 columnas y lo pega en la im\'agen fuente. Para los elementos internos, 
+suma todos los elementos en un cuadrado de 4x4 pixeles, con el elemento actual en el medio (para I[i][j], el cuadrado va desde I[i-2][j-2] hasta I[i+2][j+2]).
+A \'esta suma que se realiza para cada pixel (con todos los colores, no por separado) se la divide por 75*255*255 y luego se lo multiplica por alfa (valor de entrada) 
+y src (en su color correspondiente), para finalmente multiplicar por el valor original.
+
+La dificultad consiste en recorrer eficientemente el cuadrado de 4x4 para hacer la sumatoria, ya que las filas no son datos contiguos en memoria.
 
 \subsection{Implementaci\'on en C}
-
+En C podemos ver y recorrer la submatriz de 4x4 con facilidad. Por eso, luego de usar 2 for para recorrer cada elemento de la matriz se utilizan otros dos for para 
+recorrer la submatriz, sumar y guardar los elementos en variables auxiliares y luego hacer las cuentas correspondientes con cada color del pixel.
+La \'unica consideraci\'on en el codigo es que, si estamos en el marco de 2 filas - 2 columnas, los pixeles se copian directamente sin procesar.
 
 
 \subsection{Implementaci\'on en assembler}
+La implementaci\'on en assembler varia muy poco conseptualmente. Primero verificamos que podemos aplicar la f\'ormula al estar 2 filas y 2 colulmnas dentro de la im\'agen.
 \begin{codesnippet}
 \begin{verbatim}
-
-
-
+				CMP R10, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 FILAS
+				JBE .copioFila
+				; SI NO:
+				MOV R12, RCX 
+				SUB R12, R10 	;VEO SI ESTOY EN LAS ULTIMAS 2 FILAS
+				CMP R12, 2
+				JBE .copioFila
+				; SI NO:
+				CMP R11, 1 		;VEO SI ESTOY EN LAS PRIMERAS 2 COLUMNAS
+				JA .else
 \end{verbatim}
 \end{codesnippet}
+
+
 \subsection{Resultado de los experimentos}
 
 \vspace*{0.3cm} \noindent

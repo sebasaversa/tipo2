@@ -6,7 +6,8 @@
 \vspace*{0.3cm} \noindent
 \textbf{Experimento 1 - análisis el código generado}
 
-Utilizar la herramienta \verb|objdump| para verificar como el compilador de C deja ensamblado el código C. Como es el código generado, ¿cómo se manipulan las variables locales?¿le parece que ese código generado podría optimizarse?
+Utilizar la herramienta \verb|objdump| para verificar como el compilador de C deja ensamblado el código C. Como es el código generado, ¿cómo se manipulan las variables 
+locales?¿le parece que ese código generado podría optimizarse?
 
 \vspace*{0.3cm} \noindent
 \textbf{Experimento 2 - optimizaciones del compilador}
@@ -22,7 +23,9 @@ Compile el código de C con optimizaciones del compilador, por ejemplo, pasando 
 
 	Realice una medición de las diferencias de performance entre las versiones
 	de C y ASM (el primero con -O1, -O2 y -O3).\\
-	¿Como realizó la medición?¿Cómo sabe que su medición es una buena medida?¿Cómo afecta a la medición la existencia de \emph{outliers}\footnote{en español, valor atípico: \url{http://es.wikipedia.org/wiki/Valor_atípico}}?¿De qué manera puede minimizar su impacto?¿Qué resultados obtiene si mientras corre los tests ejecuta otras aplicaciones que utilicen al máximo la CPU? 
+	¿Como realizó la medición?¿Cómo sabe que su medición es una buena medida?¿Cómo afecta a la medición la existencia de \emph{outliers}\footnote{en español, valor 
+	atípico: \url{http://es.wikipedia.org/wiki/Valor_atípico}}?¿De qué manera puede minimizar su impacto?¿Qué resultados obtiene si mientras corre los tests ejecuta 
+	otras aplicaciones que utilicen al máximo la CPU? 
 	Realizar un análisis \textbf{riguroso} de los resultados y acompañar con un gráfico que presente estas diferencias.
 
 
@@ -78,9 +81,13 @@ Luego, para ciclar y recorrer toda la matriz se modifican los valores de RSI y R
 \subsection{Resultado de los experimentos}
 
 \vspace*{0.3cm} \noindent
-\textbf{Experimento 1 - análisis el código generado}
-\input{tiles-desasmO0}
-ACA HAY Q ANALIZAR UN POCO LAS VARIABLES. QUE USA MAS MEMORIA BASICAMENTE
+\textbf{Experimento 1 - análisis del código generado}
+%\input{tiles-desasmO0}
+Analisamos el c\'odigo generado y observamos que hay un mayor uso de memoria. El algoritmo devuelto por objdump realiza una copia en memoria de varios registros antes de 
+comenzar, hechos con MOV. En algunas ocaciones vuelve a copiar el mismo valor de memoria al registro, operaci\'on innecesaria.
+
+Adem\'as de mejorar este tema usando m\'as los registros y menos la memoria, usar PUSH y POP cuando necesitamos resguardar valores de los registros (y solo en esos casos), 
+el algoritmo devuelto no utiliza instrucciones SSE, haciendo que la operaci\'on realizada sobre la imagen sea m\'as lenta.
 \vspace*{0.3cm} \noindent
 \textbf{Experimento 2 - optimizaciones del compilador}
 El compilador ofrece los flags -O1 a -03 para distintos niveles de optimizaci\'on, asi como los flags para indicar si es assembler de intel, amd, etc. 
@@ -92,5 +99,3 @@ Esto ultimo hace m\'as espec\'ifico el codigo assembler y correr\'ia mejor en un
 \vspace*{0.3cm} \noindent
 \textbf{Experimento 4 - cpu vs. bus de memoria}
 
-\vspace*{0.3cm} \noindent
-\textbf{Experimento 5 (\textit{opcional}) - secuencial vs. vectorial (parte II)}
