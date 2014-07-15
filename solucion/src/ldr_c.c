@@ -40,4 +40,8 @@ void ldr_c    (
 				sumargb *= alfa;
 				p_d->r = MIN(MAX( p_s->r + ((p_s->r * sumargb) / max), 0), 255);
 				p_d->g = MIN(MAX( p_s->g + ((p_s->g * sumargb) / max), 0), 255);
-				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);}}}}
+				p_d->b = MIN(MAX( p_s->b + ((p_s->b * sumargb) / max), 0), 255);
+			}
+		}
+	}
+}

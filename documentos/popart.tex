@@ -48,7 +48,7 @@
   Programarla y analizar el resultado. ¿Vale la pena hacer prefetching?
 
 \vspace*{0.3cm} \noindent
-\textbf{Experimento 3 - secuencial vs. vectorial}
+\textbf{Experimento 4 - secuencial vs. vectorial}
 
   Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
   Realizar gráficos que representen estas diferencias.
@@ -170,4 +170,36 @@ Otra parte del codigo importante es el que genera la sumatoria, para lo cual uti
 \textbf{Experimento 3 - prefetch}
 
 \vspace*{0.3cm} \noindent
-\textbf{Experimento 3 - secuencial vs. vectorial}
+\textbf{Experimento 4 - secuencial vs. vectorial}
+
+\begin{figure}
+  \begin{center}
+	\includegraphics[scale=0.66]{imagenes/ldr-lena.jpg}
+	\caption{Lena}
+	\label{Lena}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+	\includegraphics[scale=0.66]{imagenes/ldr-marilyn.jpg}
+	\caption{Marilyn}
+	\label{Marilyn}
+  \end{center}
+\end{figure}
+
+Realizamos los tests armando un ciclo de 100000 ejecuciones del mismo c\'odigo con las mismas entradas, y a su vez ejecutamos estos tests 5 veces para cada entrada. \'Esto nos 
+permiti\'o hacer promedios y descartar tests que daban muy lejos del valor medio.
+
+Como muestran los gr\'aficos presentados, hay claras diferencias de velocidad (medida en cantidad de ciclos) entre uno y otro lenguaje. Tambi\'en notamos que no hay una gran 
+variaci\'on de velocidad entre los distintos tamaños de las im\'agenes, as\'i como a veces las variaciones no son las esperadas. En este sentido, realizamos varias ejecuciones 
+del TP2 con exactamente los mismos par\'ametros y vimos que variaban sin un patr\'on. Pensamos que si mejoraba con las sucesivas iteraciones podr\'ia ser 
+producto de la acci\'on de la cache, pero como no fue as\'i vemos que tiene que ver con qu\'e tan ocupado est\'a el cpu. \'Esto no pudo ser confirmado ya que todos 
+los tests se corrieron sin que ningun otro programa visible a nosotros est\'e corriendo.
+\begin{figure}
+  \begin{center}
+	\includegraphics[scale=0.66]{imagenes/ldr-lena-203.jpg}
+	\caption{lena-203x203}
+	\label{lena-203x203}
+  \end{center}
+\end{figure}
